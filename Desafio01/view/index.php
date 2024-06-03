@@ -1,15 +1,9 @@
 <?php
+include_once '../geocodingAPI.php';
+include_once '../currentweatherAPI.php';
 
-getCoordinates();
-
-function getCoordinates(){
-    $city = "Rio De Janeiro";
-    $city = str_replace(" ","",$city);
-    $Geocode = "http://api.openweathermap.org/geo/1.0/direct?q=$city&limit=5&appid=e2c947183766eabde79b731c43263ff7";
-    echo '<pre>';
-    var_dump(file_get_contents($Geocode));
-    echo '<pre>';
-}
+$coordinates = getCoordinates('Rio de Janeiro');
+$weatherData = getWeatherData($coordinates['lat'],$coordinates['lon']);
 
 ?>
 <!DOCTYPE html>
@@ -48,7 +42,7 @@ function getCoordinates(){
             <div class="details">Descrição: Ensolarado</div>
             <div class="details">Umidade: 30%</div>
             <div class="details">Vento: 5km/h</div>
-            <div class="details">Sensação Térmica: 29°</div>
+            <div class="details">Sensação Térmica: 29°C</div>
         </div>
     </div>
 </body>
