@@ -1,12 +1,24 @@
 <?php
+
+getCoordinates();
+
+function getCoordinates(){
+    $city = "Rio De Janeiro";
+    $city = str_replace(" ","",$city);
+    $Geocode = "http://api.openweathermap.org/geo/1.0/direct?q=$city&limit=5&appid=e2c947183766eabde79b731c43263ff7";
+    echo '<pre>';
+    var_dump(file_get_contents($Geocode));
+    echo '<pre>';
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Styles/index.css">
-    <script type="text/javascript" src="Scripts/script.js"></script>
+    <link rel="stylesheet" href="../public/css/index.css">
+    <script type="text/javascript" src="../public/js/script.js"></script>
     <title>Previsão do tempo</title>
 </head>
 <body>
