@@ -8,8 +8,9 @@ use Imply\Desafio01\controller\Controller;
 if(!empty($_POST['city']))
 {
     $controller = new Controller();
-    $weather = $controller->getCityWeather($_POST['city']);
-    var_dump($weather);
+    // $weather = $controller->getCityWeather($_POST['city']);
+    // var_dump($weather);
+    $controller->getCityWeather($_POST['city']);
 }
 
 

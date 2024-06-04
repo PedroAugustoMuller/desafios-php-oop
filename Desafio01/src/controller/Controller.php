@@ -8,7 +8,8 @@ class Controller{
     
     function getCityWeather(string $cityName){
         
-        return $weather = Weather::getWeather($cityName);
+        // return $weather = Weather::getWeather($cityName);
+        Weather::getWeather($cityName);
     }
 
 }
