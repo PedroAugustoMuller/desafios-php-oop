@@ -8,9 +8,7 @@ use Imply\Desafio01\controller\Controller;
 if(!empty($_POST['city']))
 {
     $controller = new Controller();
-    // $weather = $controller->getCityWeather($_POST['city']);
-    // var_dump($weather);
-    $controller->getCityWeather($_POST['city']);
+    $weather = $controller->getCityWeather($_POST['city']);
 }
 
 
@@ -20,8 +18,8 @@ if(!empty($_POST['city']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../public/css/index.css">
-    <script type="text/javascript" src="../public/js/script.js"></script>
+    <link rel="stylesheet" href="./public/css/index.css">
+    <script type="text/javascript" src="./public/js/script.js"></script>
     <title>Previsão do tempo</title>
 </head>
 <body>
@@ -46,12 +44,13 @@ if(!empty($_POST['city']))
             
         </form>
         <div class="weather-info">
-            <div class="location">São Paulo, Brasil</div>
-            <div class="temperature">25°C</div>
-            <div class="details">Descrição: Ensolarado</div>
-            <div class="details">Umidade: 30%</div>
-            <div class="details">Vento: 5km/h</div>
-            <div class="details">Sensação Térmica: 29°C</div>
+            <p class="location"><?php echo $weather->getCityName()?></p>
+            <p class="temperature"><?php echo $weather->getTemp()?>°C</p>
+            <p class="details">Data: <?php echo $weather->getStringTime()?></p>
+            <p class="details">Descrição: <?php echo $weather->getDescription()?></p>
+            <p class="details">Umidade: <?php echo $weather->getHumidity()?>%</p>
+            <p class="details">Vento: <?php echo $weather->getWindSpeed()?>km/h</p>
+            <p class="details">Sensação Térmica: <?php echo $weather->getFeelsLike()?>°C</p>
         </div>
     </div>
 </body>

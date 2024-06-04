@@ -48,8 +48,13 @@ body {
 .weather-info {
     text-align: center;
 }
-
-.location {
+.location{
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: black;
+    font-weight: bold;
+}
+.details {
     font-size: 24px;
     margin-bottom: 10px;
 }
@@ -59,9 +64,4 @@ body {
     font-weight: bold;
     color: #FFAE00;
     margin-bottom: 10px;
-}
-
-.details {
-    font-size: 20px;
-    color: #666;
 }

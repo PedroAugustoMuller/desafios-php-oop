@@ -1,9 +1,10 @@
 <?php
 
-namespace Imply\Desafio01\dao;
+namespace Imply\Desafio01\model;
+use Imply\Desafio01\DB\MySQL;
 
-use DB\MySQL;
-use model\Weather;
+
+
 
 class WeatherDAO{
     private object $MySQL;
