@@ -1,9 +1,17 @@
 <?php
-include_once '../geocodingAPI.php';
-include_once '../currentweatherAPI.php';
 
-$coordinates = getCoordinates('Rio de Janeiro');
-$weatherData = getWeatherData($coordinates['lat'],$coordinates['lon']);
+require '../vendor/autoload.php';
+
+use Imply\Desafio01\controller\Controller;
+
+
+if(!empty($_POST['city']))
+{
+    $controller = new Controller();
+    $weather = $controller->getCityWeather($_POST['city']);
+    var_dump($weather);
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -18,7 +26,7 @@ $weatherData = getWeatherData($coordinates['lat'],$coordinates['lon']);
 <body>
     <div class="container">
         <h1>Previsão do Tempo</h1>
-        <form class='inputs' action="" method="get">
+        <form class='inputs' action="" method="post">
             <div class="cityDiv">
                 <label for="city">Cidade</label>
                 <input type="text" name="city" id="city">
@@ -32,7 +40,7 @@ $weatherData = getWeatherData($coordinates['lat'],$coordinates['lon']);
                 </div>
             </div>
             <div class="searchDiv">
-                <button type="button" class="search-btn">Procurar</button>
+                <input type="submit" class="search-btn" value="Procurar">
             </div>
             
         </form>

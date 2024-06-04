@@ -1,0 +1,10 @@
+{
+    "name": "imply/desafio01",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Imply\\Desafio01\\": "src/"
+        }
+    },
+    "require": {}
+}
