@@ -6,15 +6,18 @@ use Exception;
 use Imply\Desafio01\modelDominio\Weather;
 
 
-class WeatherAPI{
-    public function getWeather(string $cityName)
+class WeatherAPI{    
+    /**
+     * getWeather
+     *
+     * @param  string $cityName
+     * @return object
+     */
+    public function getWeather(string $cityName) : object
     {   
-
-        $coordinates = $this->getCoordinates($cityName);
-        
-        $weatherData = $this->getWeatherDataFromApi($coordinates);
+        $weatherData = $this->getWeatherDataFromApi($cityName);
         //NAME
-        $cityName = $weatherData->name;
+        $cityInfo = $weatherData->name.', '. $weatherData->sys->country;
         //Description
         $description = $weatherData->weather[0]->description;
         //ICON
@@ -29,35 +32,22 @@ class WeatherAPI{
         $humidity = $weatherData->main->humidity;
         //UNIX
         $unixTime = $weatherData->dt;
-        return $weather = new Weather($cityName,$description,$icon,$temperature,$feelsLike,$windSpeed,$humidity,$unixTime);
-    }
-
-    private function getCoordinates(string $cityName) : array{
-        $coordinates = [];
-        try
-        {
-            $city = str_replace(" ","%20",$cityName);
-            $apiResponse = "https://maps.googleapis.com/maps/api/geocode/json?address=$city&key=AIzaSyBwrdxGDMVSGdmEDZrKUge8v4_xVbdsKlA";
-            $Geocode = json_decode(file_get_contents($apiResponse));
-            $coordinates['lat'] = $Geocode->results[0]->geometry->location->lat;
-            $coordinates['lng'] = $Geocode->results[0]->geometry->location->lng;
-        }catch (Exception $e)
-        {
-            echo $e->getMessage();
-        }
-        
-    
-        return $coordinates;
-    }
-
-    private function getWeatherDataFromApi(array $coordinates) : object
+        return $weather = new Weather($cityInfo,$description,$icon,$temperature,$feelsLike,$windSpeed,$humidity,$unixTime);
+    }    
+    /**
+     * getWeatherDataFromApi
+     *
+     * @param  string $cityName
+     * @return object
+     */
+    private function getWeatherDataFromApi(string $cityName) : object
     {
-        $lat = $coordinates['lat'];
-        $lng = $coordinates['lng'];
+        $cityName = str_replace(" ",'%20',$cityName);
         $weatherData = null;
         try
         {
-            $apiResponse = "https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lng&appid=e2c947183766eabde79b731c43263ff7&lang=pt_br&units=metric";
+            $key = '8ea5bf57527bbe0b0f7c9d7f9488d0c8';
+            $apiResponse =  "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$key&lang=pt_br&units=metric";
             $weatherData = json_decode(file_get_contents($apiResponse));
         }catch(Exception $e)
         {

@@ -4,12 +4,15 @@ require '../vendor/autoload.php';
 
 use Imply\Desafio01\controller\Controller;
 
-
-if(!empty($_POST['city']))
+$weather = null;
+if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['city'] != "")
 {
+    $city = $_POST['city'];
     $controller = new Controller();
-    $weather = $controller->getCityWeather($_POST['city']);
-}
+    $weather = $controller->getCityWeather($city);
+    var_dump($weather);
+} 
+
 
 
 ?>
@@ -18,13 +21,13 @@ if(!empty($_POST['city']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./public/css/index.css">
     <script type="text/javascript" src="./public/js/script.js"></script>
+    <link rel="stylesheet" href="./public/css/index.css">
     <title>Previsão do tempo</title>
 </head>
 <body>
     <div class="container">
-        <h1>Previsão do Tempo</h1>
+        <h1 class="title">Previsão do Tempo</h1>
         <form class='inputs' action="" method="post">
             <div class="cityDiv">
                 <label for="city">Cidade</label>
@@ -43,8 +46,9 @@ if(!empty($_POST['city']))
             </div>
             
         </form>
+        <?php if( is_object($weather) && $weather != null) : ?>
         <div class="weather-info">
-            <p class="location"><?php echo $weather->getCityName()?></p>
+            <p class="location"><?php echo $weather->getCityInfo()?></p>
             <p class="temperature"><?php echo $weather->getTemp()?>°C</p>
             <p class="details">Data: <?php echo $weather->getStringTime()?></p>
             <p class="details">Descrição: <?php echo $weather->getDescription()?></p>
@@ -52,6 +56,7 @@ if(!empty($_POST['city']))
             <p class="details">Vento: <?php echo $weather->getWindSpeed()?>km/h</p>
             <p class="details">Sensação Térmica: <?php echo $weather->getFeelsLike()?>°C</p>
         </div>
+        <?php endif;?>
     </div>
 </body>
 </html>

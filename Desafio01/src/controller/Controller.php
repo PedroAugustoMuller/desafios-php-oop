@@ -11,11 +11,18 @@ class Controller{
     
     function getCityWeather(string $cityName) : object{
         
-        // return $weather = Weather::getWeather($cityName);
-        // $weatherDAO = new WeatherDAO();
-        // $weather = $weatherDAO->getWeatherFromDb($cityName);
+        $weatherDAO = new WeatherDAO();
+        $weather = $weatherDAO->getWeatherFromDb($cityName);
+        if(is_object($weather))
+        {
+            echo "peguei do banco";
+            return $weather;
+        }
+        echo "peguei da API";
         $weatherAPI = new WeatherAPI();
-       return $weather = $weatherAPI->getWeather($cityName);
+        $weather = $weatherAPI->getWeather($cityName);
+        $weatherDAO->insertWeatherIntoDb($weather);
+        return $weather;
     }
 
 }

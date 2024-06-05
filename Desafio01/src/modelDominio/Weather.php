@@ -4,7 +4,7 @@ namespace Imply\Desafio01\modelDominio;
 
 class Weather{
 
-    private string $cityName;
+    private string $cityInfo;
     private string $description;
     private string $icon;
     private float $temp;
@@ -13,10 +13,23 @@ class Weather{
     private int $humidity;
     private int $unixTime;
     
-
-    public function __construct(string $cityName, string $description, string $icon, float $temp, float $feelsLike, float $windSpeed, int $humidity, int $unixTime)
+    
+    /**
+     * __construct
+     *
+     * @param  string $cityInfo
+     * @param  string $description
+     * @param  string $icon
+     * @param  float $temp
+     * @param  float $feelsLike
+     * @param  float $windSpeed
+     * @param  int $humidity
+     * @param  int $unixTime
+     * @return void
+     */
+    public function __construct(string $cityInfo, string $description, string $icon, float $temp, float $feelsLike, float $windSpeed, int $humidity, int $unixTime)
     {
-        $this->cityName = $cityName;
+        $this->cityInfo = $cityInfo;
         $this->description = $description;
         $this->icon = $icon;
         $this->temp = $temp;
@@ -28,13 +41,13 @@ class Weather{
     }
     
     /**
-     * getCityName
+     * getcityInfo
      *
      * @return string
      */
-    public function getCityName() : string
+    public function getCityInfo() : string
     {
-        return $this->cityName;
+        return $this->cityInfo;
     }
     
     /**
@@ -100,9 +113,14 @@ class Weather{
     {
         return $this->unixTime;
     }
-
+    
+    /**
+     * getStringTime
+     *
+     * @return string
+     */
     public function getStringTime(): string
     {
-        return gmdate("d/m/Y", $this->unixTime);
+        return date('d/m/Y',$this->unixTime);
     }
 }

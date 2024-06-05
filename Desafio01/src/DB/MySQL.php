@@ -1,12 +1,18 @@
 <?php
 
 namespace Imply\Desafio01\DB;
+
 use PDO;
 use PDOException;
+use Imply\Desafio01;
 
 class MySQL
 {
     private object $db;
+    private const HOST = 'db';
+    private const DB = 'clima';
+    private const USER = 'root';
+    private const SENHA = 'root';
 
     public function __construct()
     {
@@ -17,7 +23,7 @@ class MySQL
     {
         try {
             return new PDO(
-                'mysql:host=' . HOST . '; dbname=' . DB . ';', USER, SENHA
+                'mysql:host=' . self::HOST . '; dbname=' . self::DB . ';', self::USER, self::SENHA
             );
         } catch (PDOException $exception) {
             throw new PDOException($exception->getMessage());
