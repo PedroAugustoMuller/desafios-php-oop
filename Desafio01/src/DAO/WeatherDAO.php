@@ -1,10 +1,10 @@
 <?php
 
-namespace Imply\Desafio01\model;
+namespace Imply\Desafio01\DAO;
 
 use Exception;
 use Imply\Desafio01\DB\MySQL;
-use Imply\Desafio01\modelDominio\Weather;
+use Imply\Desafio01\model\Weather;
 use InvalidArgumentException;
 use PDOException;
 
@@ -74,16 +74,20 @@ class WeatherDAO{
     {
         try
         {
-            $currentUnixTime = time() - (60*60);
             $insert = 'SELECT city_info,description,icon,temp,feels_like,wind_speed,humidity,unixTime FROM weather 
-            WHERE city_info LIKE :city_info AND unixTime < :current_unix_time;';
+            WHERE city_info LIKE :city_info AND UNIX_TIMESTAMP() - unixTime < 3600 ORDER BY id DESC LIMIT 1';
             $stmt = $this->MySQL->getDb()->prepare($insert);
             $cityNameForQuery = $cityName . '%';
             $stmt->bindparam(':city_info',$cityNameForQuery);
-            $stmt->bindparam(':current_unix_time', $currentUnixTime);
             $stmt->execute();
-            $weatherData = $stmt->fetchAll();
-            return $this->createWeatherObject($weatherData);
+            $weatherData= $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
+            $weather = $this->createWeatherObjectFromDb($weatherData);
+            if($weather != null)
+            {
+                return $weather;
+            }
+            return null;
+            throw new InvalidArgumentException("Nenhum dado retornado");
         }catch(PDOException $PdoException)
         {
             echo $PdoException->getMessage();
@@ -94,23 +98,28 @@ class WeatherDAO{
         return 0; 
     }
 
-    public function createWeatherObject(array $weatherData)
+    public function createWeatherObjectFromDb(array $weatherData)
     {
-        // $cityInfo = $weatherData->name.', '. $weatherData->sys->country;
-        // //Description
-        // $description = $weatherData->weather[0]->description;
+        if($weatherData == null)
+        {
+            return null;
+        }
+        $cityInfo = $weatherData[0]['city_info'];
+        // Description
+        $description = $weatherData[0]['description'];
         // //ICON
-        // $icon = $weatherData->weather[0]->icon;
+        $icon = $weatherData[0]['icon'];
         // //TEMPERATURE
-        // $temperature = $weatherData->main->temp;
+        $temperature = $weatherData[0]['temp'];
         // //WHAT TEMP FEELS LIKE
-        // $feelsLike = $weatherData->main->feels_like;
+        $feelsLike = $weatherData[0]['feels_like'];
         // //WINDSPEED
-        // $windSpeed = $weatherData->wind->speed;
+        $windSpeed = $weatherData[0]['wind_speed'];
         // //HUMIDITY
-        // $humidity = $weatherData->main->humidity;
+        $humidity = $weatherData[0]['humidity'];
         // //UNIX
-        // $unixTime = $weatherData->dt;
-        // return $weather = new Weather($cityInfo,$description,$icon,$temperature,$feelsLike,$windSpeed,$humidity,$unixTime);
+        $unixTime = $weatherData[0]['unixTime'];
+        $weather = new Weather($cityInfo,$description,$icon,$temperature,$feelsLike,$windSpeed,$humidity,$unixTime);
+        return $weather;
     }
 }

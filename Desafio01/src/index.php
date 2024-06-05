@@ -10,7 +10,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['city'] != "")
     $city = $_POST['city'];
     $controller = new Controller();
     $weather = $controller->getCityWeather($city);
-    var_dump($weather);
 } 
 
 
@@ -21,8 +20,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['city'] != "")
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="./public/js/script.js"></script>
-    <link rel="stylesheet" href="./public/css/index.css">
+    <script type="text/javascript" src="../public/js/script.js"></script>
+    <link rel="stylesheet" href="../public/css/index.css">
     <title>Previsão do tempo</title>
 </head>
 <body>

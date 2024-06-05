@@ -24,5 +24,7 @@ INSERT INTO weather(city_info,description,icon,temp,feels_like,wind_speed,humidi
 	:humidity,
 	:unixTime);
 
-SELECT (city_info,description,icon,temp,feels_like,wind_speed,humidity,unixTime) FROM weather 
-WHERE city_info = :city_info AND unixTime+(60*60) < currentUnixTime;
+select * from weather 
+WHERE city_info LIKE 'Santa Cruz do Sul%' AND UNIX_TIMESTAMP() - unixTime < 3600 
+ORDER BY id 
+DESC LIMIT 1;  

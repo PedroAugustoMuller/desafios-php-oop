@@ -7,6 +7,7 @@ Na página:\
 2- Deve existir um checkbox que, caso selecionado, deve abrir outro campo para colocar um endereço de \email e enviar o resultado para tal.\
 
 3-O resultado da chamada da API também deve aparecer na página.\
+
 No "servidor":\
 
 1-A API para a busca do tempo será a https://openweathermap.org/, que necessita da criação de uma conta\ gratuita para fornecer a api key.\

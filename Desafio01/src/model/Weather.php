@@ -1,6 +1,6 @@
 <?php
 
-namespace Imply\Desafio01\modelDominio;
+namespace Imply\Desafio01\model;
 
 class Weather{
 
