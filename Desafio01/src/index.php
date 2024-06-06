@@ -10,10 +10,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['city'] != "")
     $city = $_POST['city'];
     $controller = new Controller();
     $weather = $controller->getCityWeather($city);
-    // if($_POST['email'] != "")
-    // {
-
-    // }
+    if(isset($_POST['sendEmailCheckBox']))
+    {
+        if($_POST['emailText'] == ""){
+            return;
+        }
+        $targetEmail = $_POST['emailText'];
+        $controller->sendEmail($weather,$targetEmail);
+    }
 } 
 
 
@@ -30,6 +34,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['city'] != "")
 </head>
 <body>
     <div class="container">
+        <div class="head">
         <h1 class="title">Previsão do Tempo</h1>
         <form class='inputs' action="" method="post">
             <div class="cityDiv">
@@ -41,20 +46,23 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['city'] != "")
                 <input type="checkbox" name="sendEmailCheckBox" id="sendEmailCheckBox" onclick="changeEmailDivState()" autocomplete="off">
                 <div class="emailDiv" id='emailDiv'>
                     <label for="emailText">Email</label>
-                    <input type="text" name="emailText" id="emailText">
+                    <input type="email" name="emailText" id="emailText">
                 </div>
             </div>
             <div class="searchDiv">
-                <input type="submit" class="search-btn" value="Procurar">
+                <input type="submit" class="search-btn" id="searchBtn" value="Procurar" onclick="checkIfEmailEmpty()">
             </div>
             
         </form>
+        </div>
         <?php if($weather instanceof Exception) : ?>
             <p class="temperature">Cidade não encontrada</p>
+            <script>alertCityNotFound()</script>
         <?php endif;?>   
         <?php if( is_object($weather) && ! $weather instanceof Exception) : ?>
         <div class="weather-info">
             <p class="location"><?php echo $weather->getCityInfo()?></p>
+            <img src=<?php echo "https://openweathermap.org/img/wn/".$weather->getIcon()."@2x.png"?> alt="">
             <p class="temperature"><?php echo $weather->getTemp()?>°C</p>
             <p class="details">Data: <?php echo $weather->getStringTime()?></p>
             <p class="details">Descrição: <?php echo $weather->getDescription()?></p>

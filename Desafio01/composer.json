@@ -6,6 +6,12 @@
             "Imply\\Desafio01\\": "src/"
         }
     },
+    "authors": [
+        {
+            "name": "PedroAugustoMuller",
+            "email": "pedro.muller.a@gmail.com"
+        }
+    ],
     "require": {
         "symfony/mailer": "^7.1"
     }

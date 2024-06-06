@@ -30,11 +30,11 @@ class Weather{
     public function __construct(string $cityInfo, string $description, string $icon, float $temp, float $feelsLike, float $windSpeed, int $humidity, int $unixTime)
     {
         $this->cityInfo = $cityInfo;
-        $this->description = $description;
+        $this->description = $this->setDescription($description);
         $this->icon = $icon;
-        $this->temp = $temp;
-        $this->feelsLike = $feelsLike;
-        $this->windSpeed = $windSpeed;
+        $this->temp = $this->setTemp($temp);
+        $this->feelsLike = $this->setFeelsLike($feelsLike);
+        $this->windSpeed = $this->setWindSpeed($windSpeed);
         $this->humidity = $humidity;
         $this->unixTime = $unixTime;
         
@@ -49,7 +49,6 @@ class Weather{
     {
         return $this->cityInfo;
     }
-    
     /**
      * getDescription
      *
@@ -113,7 +112,6 @@ class Weather{
     {
         return $this->unixTime;
     }
-    
     /**
      * getStringTime
      *
@@ -123,4 +121,44 @@ class Weather{
     {
         return date('d/m/Y',$this->unixTime);
     }
+    /**
+    * setDescription
+    *
+    * @param  string $description
+    * @return self
+    */
+    private function setDescription(string $description) : string
+    {
+        return $this->description = mb_strtoupper($description);
+    }    
+    /**
+     * setTemp
+     *
+     * @param  float $temp
+     * @return self
+     */
+    private function setTemp(float $temp) : float
+    {
+        return $this->temp = number_format($temp,2);
+    }    
+    /**
+     * setFeelsLike
+     *
+     * @param  float $feelsLike
+     * @return self
+     */
+    private function setFeelsLike(float $feelsLike) : float
+    {
+        return $this->feelsLike = number_format($feelsLike,2);
+    }    
+    /**
+     * setWindSpeed
+     *
+     * @param  float $windSpeed
+     * @return self
+     */
+    private function setWindSpeed(float $windSpeed) : float
+    {
+        return $this->windSpeed = number_format($windSpeed*(3.6),2);
+    }     
 }

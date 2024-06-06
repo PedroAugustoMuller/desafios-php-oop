@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'imply/desafio01',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => '81637df6ea2ec4da352a524170723524ebe4dac9',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '9f8dd75c6d9a79e624fcefef5903ba0acb8c50f9',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'imply/desafio01' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '81637df6ea2ec4da352a524170723524ebe4dac9',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '9f8dd75c6d9a79e624fcefef5903ba0acb8c50f9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
