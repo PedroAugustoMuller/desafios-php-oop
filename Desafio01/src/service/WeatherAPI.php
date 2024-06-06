@@ -55,24 +55,22 @@ class WeatherAPI{
         }
         return $weatherData;
         
-    }
-    private function createWeatherObject(object $weatherData)
+    }    
+    /**
+     * createWeatherObject
+     *
+     * @param  mixed $weatherData
+     * @return object
+     */
+    private function createWeatherObject(object $weatherData) : object
     {
-        //NAME
         $cityInfo = $weatherData->name.', '. $weatherData->sys->country;
-        //Description
         $description = $weatherData->weather[0]->description;
-        //ICON
         $icon = $weatherData->weather[0]->icon;
-        //TEMPERATURE
         $temperature = $weatherData->main->temp;
-        //WHAT TEMP FEELS LIKE
         $feelsLike = $weatherData->main->feels_like;
-        //WINDSPEED
         $windSpeed = $weatherData->wind->speed;
-        //HUMIDITY
         $humidity = $weatherData->main->humidity;
-        //UNIX
         $unixTime = $weatherData->dt;
         return $weather = new Weather($cityInfo,$description,$icon,$temperature,$feelsLike,$windSpeed,$humidity,$unixTime);    
     }
