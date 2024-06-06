@@ -10,6 +10,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['city'] != "")
     $city = $_POST['city'];
     $controller = new Controller();
     $weather = $controller->getCityWeather($city);
+    // if($_POST['email'] != "")
+    // {
+
+    // }
 } 
 
 
@@ -45,7 +49,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['city'] != "")
             </div>
             
         </form>
-        <?php if( is_object($weather) && $weather != null) : ?>
+        <?php if($weather instanceof Exception) : ?>
+            <p class="temperature">Cidade não encontrada</p>
+        <?php endif;?>   
+        <?php if( is_object($weather) && ! $weather instanceof Exception) : ?>
         <div class="weather-info">
             <p class="location"><?php echo $weather->getCityInfo()?></p>
             <p class="temperature"><?php echo $weather->getTemp()?>°C</p>

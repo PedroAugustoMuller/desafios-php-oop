@@ -6,5 +6,7 @@
             "Imply\\Desafio01\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "symfony/mailer": "^7.1"
+    }
 }

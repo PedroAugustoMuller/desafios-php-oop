@@ -13,12 +13,15 @@ class Controller{
     {    
         $weatherDAO = new WeatherDAO();
         $weather = $weatherDAO->getWeatherFromDb($cityName);
-        if($weather == null)
+        if($weather instanceof Weather)
         {
-            $weatherAPI = new WeatherAPI();
-            $weather = $weatherAPI->getWeatherFromApi($cityName);
-            $weatherDAO->insertWeatherIntoDb($weather);
             return $weather;
+        }
+        $weatherAPI = new WeatherAPI();
+        $weather = $weatherAPI->getWeatherFromApi($cityName);
+        if($weather instanceof Weather)
+        {
+            $weatherDAO->insertWeatherIntoDb($weather);
         }
         return $weather;
     }

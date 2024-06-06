@@ -16,9 +16,20 @@ class WeatherAPI{
      * @return object
      */
     public function getWeatherFromApi(string $cityName) : object
-    {   
+    {   try
+        {
+
         $weatherData = $this->getWeatherData($cityName);
+        if(!property_exists($weatherData,'weather'))
+        {
+            throw new InvalidArgumentException("Cidade não encontrada");
+        }
         return $this->createWeatherObject($weatherData);
+        }
+        catch(InvalidArgumentException $e)
+        {
+            return $e;
+        }
     }    
     /**
      * getWeatherDataFromApi
@@ -47,12 +58,6 @@ class WeatherAPI{
     }
     private function createWeatherObject(object $weatherData)
     {
-        try
-        {
-            if(is_null($weatherData))
-        {
-            throw new Exception("Cidade não válida");
-        }
         //NAME
         $cityInfo = $weatherData->name.', '. $weatherData->sys->country;
         //Description
@@ -69,12 +74,6 @@ class WeatherAPI{
         $humidity = $weatherData->main->humidity;
         //UNIX
         $unixTime = $weatherData->dt;
-        return $weather = new Weather($cityInfo,$description,$icon,$temperature,$feelsLike,$windSpeed,$humidity,$unixTime);
-        }
-        catch(Exception $e)
-        {
-            $e->getMessage();
-        }
-        
+        return $weather = new Weather($cityInfo,$description,$icon,$temperature,$feelsLike,$windSpeed,$humidity,$unixTime);    
     }
 }

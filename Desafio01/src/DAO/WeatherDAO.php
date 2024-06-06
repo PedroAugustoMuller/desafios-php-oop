@@ -72,6 +72,7 @@ class WeatherDAO{
 
     public function getWeatherFromDb(string $cityName)
     {
+        $error = null;
         try
         {
             $insert = 'SELECT city_info,description,icon,temp,feels_like,wind_speed,humidity,unixTime FROM weather 
@@ -80,22 +81,26 @@ class WeatherDAO{
             $cityNameForQuery = $cityName . '%';
             $stmt->bindparam(':city_info',$cityNameForQuery);
             $stmt->execute();
-            $weatherData= $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
-            $weather = $this->createWeatherObjectFromDb($weatherData);
-            if($weather != null)
+            $weatherData = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
+            if(empty($weatherData))
             {
-                return $weather;
+                throw new Exception("Nenhum dado retornado");
             }
-            return null;
-            throw new InvalidArgumentException("Nenhum dado retornado");
+            $weather = $this->createWeatherObjectFromDb($weatherData);
+            return $weather;
         }catch(PDOException $PdoException)
         {
-            echo $PdoException->getMessage();
-        }catch(Exception $Exc)
-        {
-            echo $Exc->getMessage();
+            $error = $PdoException;
         }
-        return 0; 
+        catch(InvalidArgumentException $invalidExp)
+        {
+            $error = $invalidExp;
+        }
+        catch(Exception $Exc)
+        {
+            $error = $Exc;
+        }
+        return $error; 
     }
 
     public function createWeatherObjectFromDb(array $weatherData)
