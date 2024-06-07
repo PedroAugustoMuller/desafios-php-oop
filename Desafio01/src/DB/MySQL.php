@@ -23,7 +23,9 @@ class MySQL
     {
         try {
             return new PDO(
-                'mysql:host=' . self::HOST . '; dbname=' . self::DB . ';', self::USER, self::SENHA
+                'mysql:host=' . self::HOST . '; dbname=' . self::DB . ';',
+                self::USER,
+                self::SENHA
             );
         } catch (PDOException $exception) {
             throw new PDOException($exception->getMessage());

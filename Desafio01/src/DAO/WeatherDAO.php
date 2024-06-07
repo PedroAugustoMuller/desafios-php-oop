@@ -8,24 +8,24 @@ use Imply\Desafio01\model\Weather;
 use InvalidArgumentException;
 use PDOException;
 
-class WeatherDAO{
+class WeatherDAO
+{
     private object $MySQL;
 
     public function __construct()
     {
         $this->MySQL = new MySQL();
     }
-    
+
     /**
      * insertWeatherIntoDb
      *
      * @param  Weather $weather
      * @return int
      */
-    public function insertWeatherIntoDb(Weather $weather) : int
+    public function insertWeatherIntoDb(Weather $weather): int
     {
-        try
-        {
+        try {
             $stmt = 'INSERT INTO weather (city_info,description,icon,temp,feels_like,wind_speed,humidity,unixTime) VALUES (
             :city_info,
             :description,
@@ -45,25 +45,22 @@ class WeatherDAO{
             $windSpeed = $weather->getWindSpeed();
             $humidity = $weather->getHumidity();
             $unixTime = $weather->getUnixTime();
-            $preparedStmt->bindparam(':city_info',$cityInfo);
-            $preparedStmt->bindParam(':description',$description);
-            $preparedStmt->bindParam(':icon',$icon);
-            $preparedStmt->bindParam(':temp',$temp);
-            $preparedStmt->bindparam(':feels_like',$feelsLike);
-            $preparedStmt->bindparam(':wind_speed',$windSpeed);
-            $preparedStmt->bindparam(':humidity',$humidity);
-            $preparedStmt->bindparam(':unixTime',$unixTime);
+            $preparedStmt->bindparam(':city_info', $cityInfo);
+            $preparedStmt->bindParam(':description', $description);
+            $preparedStmt->bindParam(':icon', $icon);
+            $preparedStmt->bindParam(':temp', $temp);
+            $preparedStmt->bindparam(':feels_like', $feelsLike);
+            $preparedStmt->bindparam(':wind_speed', $windSpeed);
+            $preparedStmt->bindparam(':humidity', $humidity);
+            $preparedStmt->bindparam(':unixTime', $unixTime);
             $preparedStmt->execute();
-            if($preparedStmt->rowCount() == 1)
-            {
+            if ($preparedStmt->rowCount() == 1) {
                 $this->MySQL->getDb()->commit();
                 return $preparedStmt->rowCount();
             }
-        }catch(PDOException $PdoException)
-        {
+        } catch (PDOException $PdoException) {
             throw new InvalidArgumentException($PdoException->getMessage());
-        }catch(Exception $Exc)
-        {
+        } catch (Exception $Exc) {
             throw new InvalidArgumentException($Exc->getMessage());
         }
         $this->MySQL->getDb()->rollBack();
@@ -73,40 +70,32 @@ class WeatherDAO{
     public function getWeatherFromDb(string $cityName)
     {
         $error = null;
-        try
-        {
+        try {
             $insert = 'SELECT city_info,description,icon,temp,feels_like,wind_speed,humidity,unixTime FROM weather 
             WHERE city_info LIKE :city_info AND UNIX_TIMESTAMP() - unixTime < 3600 ORDER BY id DESC LIMIT 1';
             $stmt = $this->MySQL->getDb()->prepare($insert);
             $cityNameForQuery = $cityName . '%';
-            $stmt->bindparam(':city_info',$cityNameForQuery);
+            $stmt->bindparam(':city_info', $cityNameForQuery);
             $stmt->execute();
             $weatherData = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
-            if(empty($weatherData))
-            {
+            if (empty($weatherData)) {
                 throw new Exception("Nenhum dado retornado");
             }
             $weather = $this->createWeatherObjectFromDb($weatherData);
             return $weather;
-        }catch(PDOException $PdoException)
-        {
+        } catch (PDOException $PdoException) {
             $error = $PdoException;
-        }
-        catch(InvalidArgumentException $invalidExp)
-        {
+        } catch (InvalidArgumentException $invalidExp) {
             $error = $invalidExp;
-        }
-        catch(Exception $Exc)
-        {
+        } catch (Exception $Exc) {
             $error = $Exc;
         }
-        return $error; 
+        return $error;
     }
 
     public function createWeatherObjectFromDb(array $weatherData)
     {
-        if($weatherData == null)
-        {
+        if ($weatherData == null) {
             return null;
         }
         $cityInfo = $weatherData[0]['city_info'];
@@ -124,7 +113,7 @@ class WeatherDAO{
         $humidity = $weatherData[0]['humidity'];
         // //UNIX
         $unixTime = $weatherData[0]['unixTime'];
-        $weather = new Weather($cityInfo,$description,$icon,$temperature,$feelsLike,$windSpeed,$humidity,$unixTime);
+        $weather = new Weather($cityInfo, $description, $icon, $temperature, $feelsLike, $windSpeed, $humidity, $unixTime);
         return $weather;
     }
 }

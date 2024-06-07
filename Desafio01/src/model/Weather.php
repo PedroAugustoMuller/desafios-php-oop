@@ -2,7 +2,8 @@
 
 namespace Imply\Desafio01\model;
 
-class Weather{
+class Weather
+{
 
     private string $cityInfo;
     private string $description;
@@ -12,8 +13,8 @@ class Weather{
     private float $windSpeed;
     private int $humidity;
     private int $unixTime;
-    
-    
+
+
     /**
      * __construct
      *
@@ -37,15 +38,14 @@ class Weather{
         $this->windSpeed = $this->setWindSpeed($windSpeed);
         $this->humidity = $humidity;
         $this->unixTime = $unixTime;
-        
     }
-    
+
     /**
      * getcityInfo
      *
      * @return string
      */
-    public function getCityInfo() : string
+    public function getCityInfo(): string
     {
         return $this->cityInfo;
     }
@@ -54,61 +54,61 @@ class Weather{
      *
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
-    }    
+    }
     /**
      * getIcon
      *
      * @return string
      */
-    public function getIcon() : string
+    public function getIcon(): string
     {
         return $this->icon;
-    }    
+    }
     /**
      * getTemp
      *
      * @return float
      */
-    public function getTemp() : float
+    public function getTemp(): float
     {
         return $this->temp;
-    }    
+    }
     /**
      * getFeelsLike
      *
      * @return float
      */
-    public function getFeelsLike() : float
+    public function getFeelsLike(): float
     {
         return $this->feelsLike;
-    }    
+    }
     /**
      * getWindSpeed
      *
      * @return float
      */
-    public function getWindSpeed() : float
+    public function getWindSpeed(): float
     {
         return $this->windSpeed;
-    }    
+    }
     /**
      * getHumidity
      *
      * @return int
      */
-    public function getHumidity() : int
+    public function getHumidity(): int
     {
         return $this->humidity;
-    }    
+    }
     /**
      * getUnixTime
      *
      * @return int
      */
-    public function getUnixTime() : int
+    public function getUnixTime(): int
     {
         return $this->unixTime;
     }
@@ -119,46 +119,46 @@ class Weather{
      */
     public function getStringTime(): string
     {
-        return date('d/m/Y',$this->unixTime);
+        return date('d/m/Y', $this->unixTime);
     }
     /**
-    * setDescription
-    *
-    * @param  string $description
-    * @return self
-    */
-    private function setDescription(string $description) : string
+     * setDescription
+     *
+     * @param  string $description
+     * @return self
+     */
+    private function setDescription(string $description): string
     {
         return $this->description = mb_strtoupper($description);
-    }    
+    }
     /**
      * setTemp
      *
      * @param  float $temp
      * @return self
      */
-    private function setTemp(float $temp) : float
+    private function setTemp(float $temp): float
     {
-        return $this->temp = number_format($temp,2);
-    }    
+        return $this->temp = round($temp,2);
+    }
     /**
      * setFeelsLike
      *
      * @param  float $feelsLike
      * @return self
      */
-    private function setFeelsLike(float $feelsLike) : float
+    private function setFeelsLike(float $feelsLike): float
     {
-        return $this->feelsLike = number_format($feelsLike,2);
-    }    
+        return $this->feelsLike = round($feelsLike,2);
+    }
     /**
      * setWindSpeed
      *
      * @param  float $windSpeed
      * @return self
      */
-    private function setWindSpeed(float $windSpeed) : float
+    private function setWindSpeed(float $windSpeed): float
     {
-        return $this->windSpeed = number_format($windSpeed*(3.6),2);
-    }     
+        return $this->windSpeed = round($windSpeed,2);
+    }
 }

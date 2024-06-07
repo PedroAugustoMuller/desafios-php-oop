@@ -1,8 +1,9 @@
-*{
+* {
     font-family: "Roboto", sans-serif;
     font-weight: 600;
     font-style: normal;
 }
+
 body {
     font-family: Arial, sans-serif;
     background-image: url('../img/clima-2.jpg');
@@ -25,17 +26,21 @@ body {
     backdrop-filter: blur(5px);
 }
 
-.title{
+.title {
     text-align: center;
 }
 
-.inputs{
+.inputs {
     display: grid;
     justify-content: center;
     gap: 12px;
 }
 
-.checkBox{
+.inputs:focus::placeholder {
+    color: transparent;
+}
+
+.checkBox {
     width: 1.15em;
     height: 1.15em;
     border: 1px solid black;
@@ -43,17 +48,17 @@ body {
     transition: 2s;
 }
 
-.input{
+.input {
     border: 2px solid black;
     border-radius: 4px;
 }
-.emailDiv{
+
+.emailDiv {
     margin-top: 12px;
     display: none;
 }
 
-.search-btn
-{
+.search-btn {
     border: 1px solid black;
     height: 36px;
     width: 250px;
@@ -64,16 +69,18 @@ body {
     transition: 0.5s;
 }
 
-.search-btn:hover{
+.search-btn:hover {
     background: #4d73c0;
 }
 
-.search-btn:active{
+.search-btn:active {
     background: #4567ab;
 }
-.weather-title{
+
+.weather-title {
     text-align: center;
 }
+
 .weather-info {
     display: grid;
     grid-auto-flow: column;
@@ -81,22 +88,25 @@ body {
     column-gap: 100px;
 }
 
-.weather-main{
+.weather-main {
     display: grid;
-    grid-auto-flow: column; 
+    width: auto;
+    grid-auto-flow: column;
     column-gap: 10px;
     align-items: center;
 }
 
-.weather-info .description{
+.weather-info .description {
     text-align: left;
 }
-.location{
+
+.location {
     font-size: 36px;
     margin-bottom: 15px;
     color: black;
     font-weight: bold;
 }
+
 .details {
     font-size: 24px;
     margin-bottom: 10px;
@@ -105,7 +115,7 @@ body {
 .temperature {
     font-size: 36px;
     font-weight: bold;
-    color: #FFAE00;
+    color: #4d73c0;
     text-align: center;
     text-decoration: underline;
 }
