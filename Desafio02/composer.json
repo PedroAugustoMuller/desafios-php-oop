@@ -1,0 +1,16 @@
+{
+    "name": "pedromuller/desafio02",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Pedromuller\\Desafio02\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "PedroAugustoMuller",
+            "email": "pedro.muller.a@gmail.com"
+        }
+    ],
+    "require": {}
+}
