@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Pedromuller\\Desafio02\\' => array($baseDir . '/src'),
+    'Imply\\Desafio02\\' => array($baseDir . '/src'),
 );

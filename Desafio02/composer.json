@@ -1,16 +1,10 @@
 {
-    "name": "pedromuller/desafio02",
+    "name": "imply/desafio02",
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Pedromuller\\Desafio02\\": "src/"
+            "Imply\\Desafio02\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "PedroAugustoMuller",
-            "email": "pedro.muller.a@gmail.com"
-        }
-    ],
     "require": {}
 }
