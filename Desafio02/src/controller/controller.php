@@ -11,6 +11,10 @@ use InvalidArgumentException;
 
 class controller
 {
+    /**
+     * @param int $id
+     * @return array|null
+     */
     public function getProductsFromDb(int $id = 0)
     {
         $productDAO = new ProductDAO();
@@ -21,6 +25,10 @@ class controller
         return $productDAO->readProductById($id);
     }
 
+    /**
+     * @return Exception|InvalidArgumentException
+     * @throws Exception
+     */
     public function treatRequest()
     {
         try {
@@ -28,15 +36,18 @@ class controller
             if ($route instanceof Exception) {
                 throw $route;
             }
-            if ($route['METHOD'] != 'GET' || $route['METHOD'] != 'DELETE') {
-
+            if ($route['method'] != 'GET' && $route['method'] != 'DELETE') {
+                
             }
 
         } catch (InvalidArgumentException $invalidArgumentException) {
-
+            return $invalidArgumentException;
         }
     }
 
+    /**
+     * @return void
+     */
     public function populateDb()
     {
         $fakeStore = new FakeStoreAPI();
@@ -47,6 +58,10 @@ class controller
         }
     }
 
+    /**
+     * @param Product $product
+     * @return void
+     */
     public function createProductTableRow(Product $product)
     {
         echo "<tr>";

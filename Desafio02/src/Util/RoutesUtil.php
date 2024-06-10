@@ -22,9 +22,8 @@ class RoutesUtil
     private static function getURLs(): array
     {
         $uri = $_SERVER['REQUEST_URI'];
-        var_dump($uri);
-        $pattern = '#/desafio02/src/view.php/#i';
-        $uri = preg_replace($pattern, '', $uri);
+        $pattern = '#/Desafio02/src/index.php/#i';
+        $uri = preg_replace($pattern, '', $uri);;
         return explode('/',$uri);
     }
 
