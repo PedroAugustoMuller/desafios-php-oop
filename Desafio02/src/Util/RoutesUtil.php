@@ -23,7 +23,7 @@ class RoutesUtil
     {
         $uri = $_SERVER['REQUEST_URI'];
         var_dump($uri);
-        $pattern = '#/desafio02/src/index.php/#i';
+        $pattern = '#/desafio02/src/view.php/#i';
         $uri = preg_replace($pattern, '', $uri);
         return explode('/',$uri);
     }

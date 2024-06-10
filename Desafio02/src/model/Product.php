@@ -52,9 +52,12 @@ class Product
     {
         return $this->image;
     }
-
     public function getReview(): Review
     {
         return $this->review;
+    }
+    public function getReviewRate(): float
+    {
+        return $this->review->getRate();
     }
 }
