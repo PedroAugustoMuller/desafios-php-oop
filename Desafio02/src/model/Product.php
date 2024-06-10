@@ -12,7 +12,7 @@ class Product
     private string $image;
     private Review $review;
 
-    public function __construct(int $id, string $title, string $price, string $description, string $category, string $image, Review $review)
+    public function __construct(int $id, string $title, string $price, string $description, string $category, string $image)
     {
         $this->id = $id;
         $this->title = $title;
@@ -20,6 +20,10 @@ class Product
         $this->description = $description;
         $this->category = $category;
         $this->image = $image;
+    }
+
+    public function setReview(Review $review)
+    {
         $this->review = $review;
     }
 
@@ -52,12 +56,30 @@ class Product
     {
         return $this->image;
     }
+
     public function getReview(): Review
     {
         return $this->review;
     }
+
     public function getReviewRate(): float
     {
         return $this->review->getRate();
+    }
+
+    public function toArray(): array
+    {
+        $array = [
+            "id" => $this->id,
+            "title" => $this->title,
+            "price" => $this->price,
+            "description" => $this->description,
+            "category" => $this->category,
+            "image" => $this->image,
+            "review_id" => $this->review->getId(),
+            "review_rate" => $this->review->getRate(),
+            "review_count" => $this->review->getCount(),
+        ];
+        return $array;
     }
 }

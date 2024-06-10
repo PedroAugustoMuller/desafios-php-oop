@@ -1,6 +1,8 @@
 <?php
 namespace Imply\Desafio02\view;
 
+require_once '../../vendor/autoload.php';
+
 use Imply\Desafio02\controller\controller;
 
 $controller = new controller();

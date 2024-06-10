@@ -14,7 +14,6 @@ class RoutesUtil
         $request['route'] = $urls[0] ?? null;
         $request['resource'] = $urls[1] ?? null;
         $request['filter'] = $urls[2] ?? null;
-        $request['param'] = $urls[3] ?? "";
         $request['method'] = $_SERVER['REQUEST_METHOD'];
 
         return self::validateRoutes($request);

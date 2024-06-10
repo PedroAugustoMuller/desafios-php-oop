@@ -11,22 +11,23 @@ use PDOException;
 class ReviewDAO
 {
     private object $MySQL;
-    private const TABLE = 'reviews';
+    private const TABLE = 'ratings';
 
     public function __construct()
     {
         $this->MySQL = new MySQL();
     }
 
-    public function insertIntoReview(Review $review)
+    public function insertIntoReview($id)
     {
         try {
-            $stmt = "INSERT INTO " . self::TABLE . "(rating,quantity)
-        VALUES(:rating,:quantity)";
+            $stmt = "INSERT INTO " . self::TABLE . "(rate,count,review_product_id)
+        VALUES(:rate,:count,:review_product_id)";
             $this->MySQL->getDb()->beginTransaction();
-            $stmt = $this->MySQL->getDb->prepare($stmt);
-            $stmt->bindValue(':rating', $review->getRating());
-            $stmt->bindValue(':quantity', $review->getQuantity());
+            $stmt = $this->MySQL->getDb()->prepare($stmt);
+            $stmt->bindValue(':rate', 0);
+            $stmt->bindValue(':count', 0);
+            $stmt->bindValue(':review_product_id', $id);
             $stmt->execute();
             if ($stmt->rowCount() == 1) {
                 $this->MySQL->getDb()->commit();

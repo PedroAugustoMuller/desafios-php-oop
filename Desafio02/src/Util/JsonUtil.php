@@ -30,7 +30,6 @@ class JsonUtil
             $data['resposta'] = $array;
         }
         $this->returnJson($data);
-
     }
 
     private function returnJson($json)

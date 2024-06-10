@@ -19,7 +19,6 @@ class FakeStoreAPI
     public function createApiProduct()
     {
         $products = $this->getApiProducts();
-        var_dump(count($products));
         $productsArray = array();
         foreach ($products as $product)
         {
