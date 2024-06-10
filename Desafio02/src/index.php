@@ -6,8 +6,7 @@ require_once "../vendor/autoload.php";
 use Imply\Desafio02\controller\controller;
 
 $controller = new controller();
-$products = $controller->getProductsFromApi();
-
+$products = $controller->getProductsFromDb();
 ?>
 
 <!doctype html>
@@ -21,15 +20,7 @@ $products = $controller->getProductsFromApi();
 </head>
 <body>
     <table>
-        <?php foreach ($products as $product) { ?>
-            <?php echo "<pre>"; ?>
-            <?php var_dump($product) ?>
-            <?php echo "<pre>"; ?>
-            <img src=<?php echo $product->image?>>
-            <?php echo "<pre>"; ?>
-        <?php }?>
+
     </table>
-
-
 </body>
 </html>

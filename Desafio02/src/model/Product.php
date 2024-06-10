@@ -10,7 +10,6 @@ class Product
     private string $description;
     private string $category;
     private string $image;
-
     private Review $review;
 
     public function __construct(int $id, string $title, string $price, string $description, string $category, string $image, Review $review)

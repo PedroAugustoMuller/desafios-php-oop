@@ -4,20 +4,26 @@ namespace Imply\Desafio02\model;
 
 class Review
 {
-    private float $rating;
-    private int $quantity;
+    private int $id;
+    private float $rate;
+    private int $count;
 
-    public function __construct(float $rating, float $quantity)
+    public function __construct(int $id,float $rate, float $count)
     {
-        $this->rating = $rating;
-        $this->quantity = $quantity;
+        $this->id = $id;
+        $this->rate = $rate;
+        $this->count = $count;
     }
-    public function getRating(): float
+    public function getId()
     {
-        return $this->rating;
+        return $this->id;
     }
-    public function getQuantity(): int
+    public function getRate(): float
     {
-        return $this->quantity;
+        return $this->rate;
+    }
+    public function getCount(): int
+    {
+        return $this->count;
     }
 }
