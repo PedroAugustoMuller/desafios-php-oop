@@ -3,9 +3,7 @@
 namespace Imply\Desafio02\DAO;
 
 use Exception;
-use http\Exception\InvalidArgumentException;
 use Imply\Desafio02\DB\MySQL;
-use Imply\Desafio02\model\Review;
 use PDOException;
 
 class ReviewDAO
@@ -18,7 +16,7 @@ class ReviewDAO
         $this->MySQL = new MySQL();
     }
 
-    public function insertIntoReview($id)
+    public function insertIntoReview($id): bool|string
     {
         try {
             $stmt = "INSERT INTO " . self::TABLE . "(rate,count,review_product_id)
@@ -33,15 +31,38 @@ class ReviewDAO
                 $this->MySQL->getDb()->commit();
                 return true;
             }
-        }catch (PDOException $PDException)
-        {
-            throw new InvalidArgumentException($PDException->getMessage());
+            $this->MySQL->getDb()->rollBack();
+            return false;
+        } catch (PDOException $PDException) {
+            return $PDException->getMessage();
+        } catch (Exception $exception) {
+            return $exception->getMessage();
         }
-        catch (Exception $exception)
-        {
-            throw new InvalidArgumentException($exception->getMessage());
+    }
+
+    public function updateProductReview($reviewData): bool|string
+    {
+        try {
+            $stmt = "UPDATE " . self::TABLE . " SET
+                rate = :rate,
+                count = :count
+                WHERE review_product_id = :review_product_id";
+            $this->MySQL->getDb()->beginTransaction();
+            $stmt = $this->MySQL->getDb()->prepare($stmt);
+            $stmt->bindValue(':rate', $reviewData['rate']);
+            $stmt->bindValue(':count', $reviewData['count']);
+            $stmt->bindValue(':review_product_id', $reviewData['review_product_id']);
+            $stmt->execute();
+            if ($stmt->rowCount() == 1) {
+                $this->MySQL->getDb()->commit();
+                return true;
+            }
+            $this->MySQL->getDb()->rollBack();
+            return false;
+        }catch(PDOException $PDException){
+            return $PDException->getMessage();
+        }catch(Exception $exception){
+            return $exception->getMessage();
         }
-        $this->MySQL->getDb()->rollBack();
-        return false;
     }
 }

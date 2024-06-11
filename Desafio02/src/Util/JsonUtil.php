@@ -24,10 +24,10 @@ class JsonUtil
     {
         $data = [];
         $data['tipo'] = 'erro';
-        if((is_array($array) && count($array) > 0) || strlen($array)>10)
+        $data['resposta'] = $array;
+        if((is_array($array) && count($array) > 0))
         {
             $data['tipo'] = 'sucesso';
-            $data['resposta'] = $array;
         }
         $this->returnJson($data);
     }

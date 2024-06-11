@@ -26,11 +26,15 @@ class ProcessRequest
         return $this->$method();
     }
 
-    public function GET()
+    public function get()
     {
         $productDAO = new ProductDAO();
         if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
             return $productDAO->readProductById($this->request['filter']);
+        }
+        if($this->request['filter'])
+        {
+            return $productDAO->readInactiveProducts();
         }
         return $productDAO->readAllProducts();
     }
@@ -49,37 +53,71 @@ class ProcessRequest
         {
             $reviewDAO = new ReviewDAO();
             $reviewDAO->insertIntoReview($response);
-            return $success = ['Produto inserido com sucesso'];
+            return $success = ['Produto inserido com sucesso - id: ' . $response];
         }
         return $error = ['Erro ao inserir Produto'];
     }
 
     private function put()
     {
-        $productDAO = new ProductDAO();
-        $id = $this->request['filter'];
-        $title = $this->dataRequest['title'];
-        $price = (float)$this->dataRequest['price'];
-        $description = $this->dataRequest['description'];
-        $category = $this->dataRequest['category'];
-        $image = $this->dataRequest['image'];
-        $produto = new Product($id, $title, $price, $description, $category, $image);
-        $response = $productDAO->updateProduct($produto);
-        if($response)
+        if($this->request['route'] == 'produtos')
         {
-            return $success = ['Produto atualizado com sucesso'];
+            $productDAO = new ProductDAO();
+            if($this->request['resource'] = 'atualizar')
+            {
+                $id = $this->request['filter'];
+                $title = $this->dataRequest['title'];
+                $price = (float)$this->dataRequest['price'];
+                $description = $this->dataRequest['description'];
+                $category = $this->dataRequest['category'];
+                $image = $this->dataRequest['image'];
+                $produto = new Product($id, $title, $price, $description, $category, $image);
+                $response = $productDAO->updateProduct($produto);
+                if($response)
+                {
+                    return $success = ['Produto atualizado com sucesso'];
+                }
+                return $error = ['Erro ao atualizar Produto'];
+            }
         }
-        return $error = ['Erro ao atualizar Produto'];
+        if($this->request['route'] == 'review')
+        {
+            $reviewDAO = new ReviewDAO();
+            if($this->request['resource'] = 'atualizar')
+            {
+                $reviewData['review_product_id'] = $this->dataRequest['product_id'];
+                $reviewData['rate'] = $this->dataRequest['rate'];
+                $reviewData['count'] = $this->dataRequest['count'];
+                $response = $reviewDAO->updateProductReview($reviewData);
+                if($response)
+                {
+                    return $success = ['Review atualizado com sucesso'];
+                }
+                return $error = ['Erro ao atualizar Review'];
+            }
+        }
     }
 
     private function delete()
     {
         $productDAO = new ProductDAO();
-        $response = $productDAO->deleteProduct($this->request['filter']);
+        $response = false;
+        $error = ['Erro ao desativar produto'];
+        if($this->request['resource'] == 'reativar')
+        {
+            $id = $this->request['filter'];
+            $response = $productDAO->reactivateProduct($id);
+            $result = ['Produto desativado com sucesso'];
+        }
+        if($this->request['resource'] == 'excluir')
+        {
+            $response = $productDAO->deleteProduct($this->request['filter']);
+            $result = ['Produto desativado com sucesso'];
+        }
         if($response)
         {
-            return $success = ['Produto desativado com sucesso'];
+            return $result;
         }
-        return $error = ['Erro ao desativar produto'];
+        return $error;
     }
 }

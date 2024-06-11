@@ -22,7 +22,7 @@ class RoutesUtil
     {
         $uri = $_SERVER['REQUEST_URI'];
         $pattern = '#/Desafio02/src/index.php/#i';
-        $uri = preg_replace($pattern, '', $uri);;
+        $uri = preg_replace($pattern, '', $uri);
         return explode('/',$uri);
     }
 

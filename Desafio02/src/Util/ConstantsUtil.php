@@ -2,5 +2,5 @@
 
 namespace Imply\Desafio02\Util;
 
-define ('ROUTES', ['produtos']);
-define ('RESOURCES', ['listar','criar','atualizar','excluir']);
+define ('ROUTES', ['produtos','review']);
+define ('RESOURCES', ['listar','criar','atualizar','excluir','reativar','inativos']);

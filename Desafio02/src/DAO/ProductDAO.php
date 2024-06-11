@@ -2,13 +2,10 @@
 
 namespace Imply\Desafio02\DAO;
 
-use Couchbase\QueryException;
-use Error;
 use Exception;
+use InvalidArgumentException;
 use Imply\Desafio02\DB\MySQL;
 use Imply\Desafio02\model\Product;
-use Imply\Desafio02\model\Review;
-use PDO;
 use PDOException;
 
 class ProductDAO
@@ -22,7 +19,7 @@ class ProductDAO
         $this->MySQL = new MySQL();
     }
 
-    public function readAllProducts(): ?array
+    public function readAllProducts(): array|string
     {
         try {
             $stmt = "SELECT * FROM " . self::TABLE . " INNER JOIN " . self::REVIEW_TABLE . " 
@@ -30,7 +27,12 @@ class ProductDAO
             WHERE status = 2";
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->execute();
-            return $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
+            $retorno = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
+            if(empty($retorno))
+            {
+                throw new InvalidArgumentException("Nenhum Registro encontrado no banco de dados.");
+            }
+            return $retorno;
         } catch (PDOException $PDOException) {
             return $PDOException->getMessage();
         } catch (Exception $exception) {
@@ -47,7 +49,12 @@ class ProductDAO
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindParam(':id', $id);
             $stmt->execute();
-            return $productsData = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
+            $retorno = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
+            if(empty($retorno))
+            {
+                throw new InvalidArgumentException("Nenhum Registro encontrado no banco de dados.");
+            }
+            return $retorno;
         }catch(PDOException $PDOException)
         {
             return $PDOException->getMessage();
@@ -58,11 +65,32 @@ class ProductDAO
 
     }
 
+    public function readInactiveProducts()
+    {
+        try {
+            $stmt = "SELECT * FROM " . self::TABLE . " INNER JOIN " . self::REVIEW_TABLE . " 
+            ON " . self::TABLE . ".product_id = " . self::REVIEW_TABLE . ".review_product_id 
+            WHERE status = 1";
+            $stmt = $this->MySQL->getDb()->prepare($stmt);
+            $stmt->execute();
+            $retorno = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
+            if(empty($retorno))
+            {
+                throw new InvalidArgumentException("Nenhum Registro encontrado no banco de dados.");
+            }
+            return $retorno;
+        } catch (PDOException $PDOException) {
+            return $PDOException->getMessage();
+        } catch (Exception $exception) {
+            return $exception->getMessage();
+        }
+    }
+
     public function insertProduct(Product $product)
     {
         try {
-            $stmt = "INSERT INTO " . self::TABLE . "(title,price,description,category,image) 
-            VALUES (:title,:price,:description,:category,:image)";
+            $stmt = "INSERT INTO " . self::TABLE . "(title,price,description,category,image,status) 
+            VALUES (:title,:price,:description,:category,:image,2)";
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindValue(':title', $product->getTitle());
@@ -76,6 +104,7 @@ class ProductDAO
                 $this->MySQL->getDb()->commit();
                 return $id;
             }
+            throw new InvalidArgumentException("Não foi possível inserir os dados.");
         } catch (PDOException $PDOException) {
             return $PDOException->getMessage();
         } catch (Exception $ex) {
@@ -84,7 +113,7 @@ class ProductDAO
         return 0;
     }
 
-    public function updateProduct(Product $product)
+    public function updateProduct(Product $product): bool|string
     {
         try {
             $stmt = "UPDATE " . self::TABLE . " SET
@@ -107,29 +136,51 @@ class ProductDAO
                 $this->MySQL->getDb()->commit();
                 return true;
             }
+            throw new InvalidArgumentException("Não foi possível alterar os dados.");
         } catch (PDOException $PDOException) {
             return $PDOException->getMessage();
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
-        return false;
     }
 
-    public function deleteProduct(int $id)
+    public function reactivateProduct(int $id): bool|string
     {
         try {
             $stmt = "UPDATE " . self::TABLE . " SET
-            status = :status
+            status = 2
             WHERE product_id = :id";
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
-            $stmt->bindValue(':status',1);
-            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':id',$id );
             $stmt->execute();
             if ($stmt->rowCount() == 1) {
                 $this->MySQL->getDb()->commit();
                 return true;
             }
+            throw new InvalidArgumentException("Não foi possível reativar o produto");
+        } catch (PDOException $PDOException) {
+            return $PDOException->getMessage();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function deleteProduct(int $id): bool|string
+    {
+        try {
+            $stmt = "UPDATE " . self::TABLE . " SET
+            status = 1
+            WHERE product_id = :id";
+            $this->MySQL->getDb()->beginTransaction();
+            $stmt = $this->MySQL->getDb()->prepare($stmt);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            if ($stmt->rowCount() == 1) {
+                $this->MySQL->getDb()->commit();
+                return true;
+            }
+            throw new InvalidArgumentException("Não foi possível excluir os dados.");
         } catch (PDOException $PDOException) {
             return $PDOException->getMessage();
         } catch (Exception $ex) {

@@ -57,13 +57,21 @@ class controller
      */
     public function createProductTableRow(Product $product)
     {
+        if(!empty($product->getImage()))
+        {
+            $image = "<td><img src='" . $product->getImage() . "' alt='product-image' class='img-thumbnail'</td>";
+        }
+        else
+        {
+            $image = "<td><img src='../../public/images/products/default-product-image.png' alt='product-image' class='img-thumbnail'</td>";
+        }
         echo "<tr>";
         echo "<td>" . $product->getId() . "</td>";
         echo "<td>" . $product->getTitle() . "</td>";
         echo "<td> R$ " . $product->getPrice() . "</td>";
         echo "<td>" . $product->getDescription() . "</td>";
         echo "<td>" . $product->getCategory() . "</td>";
-        echo "<td><img src='" . $product->getImage() . "' alt='product-image' class='img-thumbnail'</td>";
+        echo $image;
         echo "<td>" . $product->getReviewRate() . "</td>";
         echo "</tr>";
     }
