@@ -35,7 +35,7 @@ class RoutesUtil
                 header('HTTP/1.1 400 Bad Request');
                 throw new InvalidArgumentException("400 - Bad Request - Rota inválida");
             }
-            if(!in_array($request['resource'], RESOURCES))
+            if(!in_array($request['resource'], RESOURCES_ADMIN))
             {
                 header('HTTP/1.1 404 Not Found');
                 throw new InvalidArgumentException("404 - Not Found - Recurso Inexistente");

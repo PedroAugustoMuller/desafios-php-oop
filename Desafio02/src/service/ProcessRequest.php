@@ -1,7 +1,7 @@
 <?php
 
 namespace Imply\Desafio02\service;
-
+session_start();
 use Imply\Desafio02\DAO\ProductDAO;
 use Imply\Desafio02\DAO\ReviewDAO;
 use Imply\Desafio02\model\Product;
@@ -19,6 +19,10 @@ class ProcessRequest
 
     public function processRequest()
     {
+        if((!isset($_SESSION['user_loged']) || $_SESSION['user_loged'] === false) && $this->request['route'] != 'user')
+        {
+            return ['usuário não logado, acesse user-entrar'];
+        }
         if ($this->request['method'] != 'GET' && $this->request['method'] != 'DELETE') {
             $this->dataRequest = JsonUtil::treatJsonBody();
         }
@@ -40,20 +44,38 @@ class ProcessRequest
 
     private function post()
     {
-        $productDAO = new ProductDAO();
-        $title = $this->dataRequest['title'];
-        $price = (float)$this->dataRequest['price'];
-        $description = $this->dataRequest['description'];
-        $category = $this->dataRequest['category'];
-        $image = $this->dataRequest['image'];
-        $produto = new Product(0, $title, $price, $description, $category, $image);
-        $response = $productDAO->insertProduct($produto);
-        if ($response > 0) {
-            $reviewDAO = new ReviewDAO();
-            $reviewDAO->insertIntoReview($response);
-            return $success = ['Produto inserido com sucesso - id: ' . $response];
+        if($this->request['route'] == 'user')
+        {
+            if($this->request['resource'] == 'entrar')
+            {
+                
+            }
+            if($this->request['resource'] == 'sair')
+            {
+                $_SESSION['user_loged'] = false;
+                return 'saindo do usuário';
+            }
         }
-        return $error = ['Erro ao inserir Produto'];
+        if($this->request['route'] == 'produtos')
+        {
+            if($this->request['resource'] == 'criar')
+            {
+                $productDAO = new ProductDAO();
+                $title = $this->dataRequest['title'];
+                $price = (float)$this->dataRequest['price'];
+                $description = $this->dataRequest['description'];
+                $category = $this->dataRequest['category'];
+                $image = $this->dataRequest['image'];
+                $produto = new Product(0, $title, $price, $description, $category, $image);
+                $response = $productDAO->insertProduct($produto);
+                if ($response > 0) {
+                    $reviewDAO = new ReviewDAO();
+                    $reviewDAO->insertIntoReview($response);
+                    return $success = ['Produto inserido com sucesso - id: ' . $response];
+                }
+                return $error = ['Erro ao inserir Produto'];
+            }
+        }
     }
 
     private function put()

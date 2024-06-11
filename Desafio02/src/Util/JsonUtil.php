@@ -23,12 +23,7 @@ class JsonUtil
     public function processArray($array)
     {
         $data = [];
-        $data['tipo'] = 'erro';
         $data['resposta'] = $array;
-        if((is_array($array) && count($array) > 0))
-        {
-            $data['tipo'] = 'sucesso';
-        }
         $this->returnJson($data);
     }
 
