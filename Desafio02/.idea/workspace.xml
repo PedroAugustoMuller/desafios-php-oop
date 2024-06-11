@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/service/treatProductImage.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQLScripts/script.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/ProductDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/ProductDAO.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/ReviewDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/ReviewDAO.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Util/ConstantsUtil.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/ConstantsUtil.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/JsonUtil.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/JsonUtil.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/RoutesUtil.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/RoutesUtil.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/controller.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/ProcessRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ProcessRequest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -74,7 +69,7 @@
       <updated>1718032595123</updated>
       <workItem from="1718032596170" duration="219000" />
       <workItem from="1718039349637" duration="10502000" />
-      <workItem from="1718106087485" duration="8135000" />
+      <workItem from="1718106087485" duration="10974000" />
     </task>
     <servers />
   </component>
