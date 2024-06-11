@@ -25,13 +25,12 @@ class treatProductImage
     }
     function createNewFile(array $targetFileData) : string
     {
-        $newDirpath = '../../';
+        $newDirpath = '../public/images/products';
         $fileExtension = preg_split('#(/|;)#',$targetFileData[0]);
         $newFilePath = $newDirpath . '/' . $this->productId . '.' . $fileExtension[1];
-        var_dump($newFilePath);
-        $newFile = fopen($newFilePath, 'w+');
+        $newFile = fopen($newFilePath, 'w');
         fwrite($newFile, $targetFileData[1]);
         fclose($newFile);
-        return $newFilePath;
+        return "../".$newFilePath;
     }
 }

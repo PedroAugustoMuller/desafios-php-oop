@@ -70,9 +70,9 @@ class ProcessRequest
                 $produto = new Product($id, $title, $price, $description, $category, $image);
                 $response = $productDAO->updateProduct($produto);
                 if ($response) {
-                    return $success = ['Produto atualizado com sucesso'];
+                    return ['Produto atualizado com sucesso'];
                 }
-                return $error = ['Erro ao atualizar Produto'];
+                return ['Erro ao atualizar Produto'];
             }
             if ($this->request['resource'] == 'imagem')
             {
@@ -80,8 +80,11 @@ class ProcessRequest
                 $imageData = $this->dataRequest['image'];
                 $treatProductImage = new treatProductImage($id,$imageData);
                 $imagePath = $treatProductImage->saveImage();
-                var_dump($imagePath);
-
+                $response = $productDAO->setProductImage($imagePath,$id);
+                if ($response) {
+                    return $success = ['Imagem atualizada com sucesso'];
+                }
+                return ['Erro ao atualizar Imagem'];
             }
         }
         if ($this->request['route'] == 'review') {
@@ -104,11 +107,11 @@ class ProcessRequest
     {
         $productDAO = new ProductDAO();
         $response = false;
-        $error = ['Erro ao desativar produto'];
+        $error = ['Erro na operação'];
         if ($this->request['resource'] == 'reativar') {
             $id = $this->request['filter'];
             $response = $productDAO->reactivateProduct($id);
-            $result = ['Produto desativado com sucesso'];
+            $result = ['Produto reativado com sucesso'];
         }
         if ($this->request['resource'] == 'excluir') {
             $response = $productDAO->deleteProduct($this->request['filter']);

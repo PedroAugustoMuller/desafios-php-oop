@@ -18,17 +18,11 @@ class controller
      * @param int $id
      * @return array|null
      */
-    public function getProductsFromDb(int $id = 0)
+    public function getProductsFromDb()
     {
         $productDAO = new ProductDAO();
-        if ($id == 0) {
-
-            $products = $productDAO->readAllProducts();
-            return $this->createProductsArray($products);
-        }
-
-        $product = $productDAO->readProductById(round($id));
-        return $this->createProductsArray($product);
+        $products = $productDAO->readAllProducts();
+        return $this->createProductsArray($products);
     }
 
     /**
@@ -49,31 +43,6 @@ class controller
         } catch (InvalidArgumentException $invalidArgumentException) {
             return $invalidArgumentException;
         }
-    }
-
-    /**
-     * @param Product $product
-     * @return void
-     */
-    public function createProductTableRow(Product $product)
-    {
-        if(!empty($product->getImage()))
-        {
-            $image = "<td><img src='" . $product->getImage() . "' alt='product-image' class='img-thumbnail'</td>";
-        }
-        else
-        {
-            $image = "<td><img src='../../public/images/products/default-product-image.png' alt='product-image' class='img-thumbnail'</td>";
-        }
-        echo "<tr>";
-        echo "<td>" . $product->getId() . "</td>";
-        echo "<td>" . $product->getTitle() . "</td>";
-        echo "<td> R$ " . $product->getPrice() . "</td>";
-        echo "<td>" . $product->getDescription() . "</td>";
-        echo "<td>" . $product->getCategory() . "</td>";
-        echo $image;
-        echo "<td>" . $product->getReviewRate() . "</td>";
-        echo "</tr>";
     }
 
     //FACTORY
@@ -99,19 +68,5 @@ class controller
             $products[] = $product;
         }
         return $products;
-    }
-
-    /**
-     * Funçao só foi usada para popular o DB pela primeira vez
-     * @return void
-     */
-    public function populateDb()
-    {
-        $fakeStore = new FakeStoreAPI();
-        $products = $fakeStore->createApiProduct();
-        foreach ($products as $product) {
-            $productDAO = new ProductDAO();
-            $productDAO->insertIntoProducts($product);
-        }
     }
 }

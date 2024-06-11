@@ -9,9 +9,24 @@ $controller = new controller();
 $products = $controller->getProductsFromDb();
 function createTableRow($products) : void
 {
-    $controller = new controller();
     foreach ($products as $product) {
-        $controller->createProductTableRow($product);
+        if(!empty($product->getImage()))
+        {
+            $image = "<td><img src='" . $product->getImage() . "' alt='product-image' class='img-thumbnail'</td>";
+        }
+        else
+        {
+            $image = "<td><img src='../../public/images/products/default-product-image.png' alt='product-image' class='img-thumbnail'</td>";
+        }
+        echo "<tr>";
+        echo "<td>" . $product->getId() . "</td>";
+        echo "<td>" . $product->getTitle() . "</td>";
+        echo "<td> R$ " . $product->getPrice() . "</td>";
+        echo "<td>" . $product->getDescription() . "</td>";
+        echo "<td>" . $product->getCategory() . "</td>";
+        echo $image;
+        echo "<td>" . $product->getReviewRate() . "</td>";
+        echo "</tr>";
     }
 }
 

@@ -4,7 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="" />
+    <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/Desafios.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/codeception.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/php.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/phpspec.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/phpunit.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/ProductDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/ProductDAO.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/controller.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/ProcessRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ProcessRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/treatProductImage.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/treatProductImage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/view.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/view.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,7 +33,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\php\php.exe">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/composer" />
     </include_path>
@@ -33,24 +49,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Desafio02",
-    "last_opened_file_path": "/home/imply/Documentos/apps_imply/php-oop/Desafios/Desafio02",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Desafio02&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/imply/Documentos/apps_imply/php-oop/Desafios/Desafio02&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PS-241.17011.119" />
-        <option value="bundled-php-predefined-ba97393d7c68-48a1a656d44e-com.jetbrains.php.sharedIndexes-PS-241.17011.119" />
+        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-PS-241.15989.102" />
+        <option value="bundled-php-predefined-ba97393d7c68-c76157a7178b-com.jetbrains.php.sharedIndexes-PS-241.15989.102" />
       </set>
     </attachedChunks>
   </component>
@@ -65,6 +81,7 @@
       <workItem from="1718032596170" duration="219000" />
       <workItem from="1718039349637" duration="10502000" />
       <workItem from="1718106087485" duration="11516000" />
+      <workItem from="1718126182937" duration="1293000" />
     </task>
     <servers />
   </component>

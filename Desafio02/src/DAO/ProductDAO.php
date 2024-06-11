@@ -144,6 +144,29 @@ class ProductDAO
         }
     }
 
+    public function setProductImage(string $imagePath, string $productId): bool|string
+    {
+        try {
+            $stmt = "UPDATE " . self::TABLE . " SET
+            image = :image
+            WHERE product_id = :id";
+            $this->MySQL->getDb()->beginTransaction();
+            $stmt = $this->MySQL->getDb()->prepare($stmt);
+            $stmt->bindValue(':image', $imagePath);
+            $stmt->bindValue(':id',$productId );
+            $stmt->execute();
+            if ($stmt->rowCount() == 1) {
+                $this->MySQL->getDb()->commit();
+                return true;
+            }
+            throw new InvalidArgumentException("Não foi possível alterar a imagem do produto.");
+        } catch (PDOException $PDOException) {
+            return $PDOException->getMessage();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     public function reactivateProduct(int $id): bool|string
     {
         try {
