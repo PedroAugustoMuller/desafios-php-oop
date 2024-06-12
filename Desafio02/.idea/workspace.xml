@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/DAO/ItemDAO.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/SQLScripts/script.sql" beforeDir="false" afterPath="$PROJECT_DIR$/public/SQLScripts/script.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/OrderDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/OrderDAO.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Item.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Item.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/ProcessRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ProcessRequest.php" afterDir="false" />
-    </list>
+    <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,7 +66,7 @@
       <workItem from="1718039349637" duration="10502000" />
       <workItem from="1718106087485" duration="11516000" />
       <workItem from="1718126182937" duration="1936000" />
-      <workItem from="1718190056889" duration="13309000" />
+      <workItem from="1718190056889" duration="13592000" />
     </task>
     <servers />
   </component>
