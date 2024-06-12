@@ -6,6 +6,7 @@ session_start();
 use Imply\Desafio02\DAO\OrderDAO;
 use Imply\Desafio02\DAO\ProductDAO;
 use Imply\Desafio02\DAO\ReviewDAO;
+use Imply\Desafio02\model\Item;
 use Imply\Desafio02\model\Product;
 use Imply\Desafio02\Util\JsonUtil;
 
@@ -70,11 +71,29 @@ class ProcessRequest
                 return 'saindo do usuário';
             }
         }
-        if($this->request['route'] == 'produtos')
+        if($this->request['route'] == 'pedidos')
         {
+            $orderDAO = new OrderDAO();
             if($this->request['resource'] == 'criar')
             {
-                $productDAO = new ProductDAO();
+                echo '<pre>';
+                var_dump($this->dataRequest);
+                $items = array();
+                foreach ($this->dataRequest['items'] as $item)
+                {
+                    $orderId = $this->dataRequest['item_order_id'];
+                    $productId = $this->dataRequest['item_product_id'];
+                    $quantity = $this->dataRequest['item_quantity'];
+                    $price = $this->dataRequest['price'];
+                    $items[] = new Item(0,$orderId, $productId, $quantity, $price);
+                }
+            }
+        }
+        if($this->request['route'] == 'produtos')
+        {
+            $productDAO = new ProductDAO();
+            if($this->request['resource'] == 'criar')
+            {
                 $title = $this->dataRequest['title'];
                 $price = (float)$this->dataRequest['price'];
                 $description = $this->dataRequest['description'];

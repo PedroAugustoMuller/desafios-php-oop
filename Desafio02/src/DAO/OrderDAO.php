@@ -18,6 +18,7 @@ class OrderDAO
     {
         $this->MySQL = new MySQL();
     }
+    //TODO ALTERAR TODAS read
     public function readAllOrders()
     {
         try {
@@ -86,6 +87,25 @@ class OrderDAO
         }catch(InvalidArgumentException $InvalidArgumentException)
         {
             return $InvalidArgumentException->getMessage();
+        }
+    }
+    public function insertOrder(Order $order)
+    {
+        $stmt = "INSERT INTO ". self::TABLE ."(order_user_id,order_date,status) VALUES
+        (:order_user_id,:order_date,:status)";
+        $stmt = $this->MySQL->getDb()->beginTransaction();
+        $stmt = $this->MySQL->getDb()->prepare($stmt);
+        $stmt->bindParam(":order_user_id", $order->getUserId());
+        $stmt->bindParam(":order_date", $order->getDate());
+        $stmt->bindParam(":status", $order->getStatus());
+        $stmt->execute();
+        if($stmt->rowCount() == 1)
+        {
+            $id = $this->MySQL->getDb()->lastInsertId();
+            foreach($order->getItems() as $item)
+            {
+
+            }
         }
     }
 }
