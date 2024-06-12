@@ -3,10 +3,12 @@
 namespace Imply\Desafio02\service;
 session_start();
 
+use DateTime;
 use Imply\Desafio02\DAO\OrderDAO;
 use Imply\Desafio02\DAO\ProductDAO;
 use Imply\Desafio02\DAO\ReviewDAO;
 use Imply\Desafio02\model\Item;
+use Imply\Desafio02\model\Order;
 use Imply\Desafio02\model\Product;
 use Imply\Desafio02\Util\JsonUtil;
 
@@ -22,8 +24,7 @@ class ProcessRequest
 
     public function processRequest()
     {
-        if((!isset($_SESSION['user_loged']) || $_SESSION['user_loged'] === false) && $this->request['route'] != 'user')
-        {
+        if ((!isset($_SESSION['user_loged']) || $_SESSION['user_loged'] === false) && $this->request['route'] != 'user') {
             return ['usuário não logado, acesse user-entrar'];
         }
         if ($this->request['method'] != 'GET' && $this->request['method'] != 'DELETE') {
@@ -35,16 +36,14 @@ class ProcessRequest
 
     public function get()
     {
-        if($this->request['route'] == 'pedidos')
-        {
+        if ($this->request['route'] == 'pedidos') {
             $orderDAO = new OrderDAO();
             if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
                 return $orderDAO->readOrderById($this->request['filter']);
             }
             return $orderDAO->readAllOrders();
         }
-        if($this->request['route'] == 'produtos')
-        {
+        if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
             if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
                 return $productDAO->readProductById($this->request['filter']);
@@ -58,42 +57,45 @@ class ProcessRequest
 
     private function post()
     {
-        if($this->request['route'] == 'user')
-        {
-            if($this->request['resource'] == 'entrar')
-            {
+        if ($this->request['route'] == 'user') {
+            if ($this->request['resource'] == 'entrar') {
                 $_SESSION['user_loged'] = true;
                 return "usuario logado";
             }
-            if($this->request['resource'] == 'sair')
-            {
+            if ($this->request['resource'] == 'sair') {
                 $_SESSION['user_loged'] = false;
                 return 'saindo do usuário';
             }
         }
-        if($this->request['route'] == 'pedidos')
-        {
+        if ($this->request['route'] == 'pedidos') {
             $orderDAO = new OrderDAO();
-            if($this->request['resource'] == 'criar')
-            {
-                echo '<pre>';
-                var_dump($this->dataRequest);
-                $items = array();
-                foreach ($this->dataRequest['items'] as $item)
-                {
-                    $orderId = $this->dataRequest['item_order_id'];
-                    $productId = $this->dataRequest['item_product_id'];
-                    $quantity = $this->dataRequest['item_quantity'];
-                    $price = $this->dataRequest['price'];
-                    $items[] = new Item(0,$orderId, $productId, $quantity, $price);
+            if ($this->request['resource'] == 'criar') {
+                $error = ['Nem todos os dados foram preenchdios'];
+                try {
+                    $items = array();
+                    foreach ($this->dataRequest['items'] as $item) {
+                        $productId = $item['item_product_id'];
+                        $quantity = $item['quantity'];
+                        $price = $item['price'];
+                        $title = $item['title'];
+                        $items[] = new Item(0, 0, $productId, $quantity, $price, $title);
+                    }
+                    //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
+                    $orderUserId = $this->dataRequest['order_user_id'];
+                    //TODO
+                    $orderdate = new DateTime($this->dataRequest['order_date']);
+                    $status = $this->dataRequest['status'];
+                    $order = new Order(0, $orderUserId, $orderdate, $status,$items);
+                    return $orderDAO->insertOrder($order);
+                } catch (Exception $exception) {
+                    return $exception->getMessage();
                 }
+                return $error;
             }
         }
-        if($this->request['route'] == 'produtos')
-        {
+        if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
-            if($this->request['resource'] == 'criar')
-            {
+            if ($this->request['resource'] == 'criar') {
                 $title = $this->dataRequest['title'];
                 $price = (float)$this->dataRequest['price'];
                 $description = $this->dataRequest['description'];
@@ -129,13 +131,12 @@ class ProcessRequest
                 }
                 return ['Erro ao atualizar Produto'];
             }
-            if ($this->request['resource'] == 'imagem')
-            {
+            if ($this->request['resource'] == 'imagem') {
                 $id = $this->request['filter'];
                 $imageData = $this->dataRequest['image'];
-                $treatProductImage = new treatProductImage($id,$imageData);
+                $treatProductImage = new treatProductImage($id, $imageData);
                 $imagePath = $treatProductImage->saveImage();
-                $response = $productDAO->setProductImage($imagePath,$id);
+                $response = $productDAO->setProductImage($imagePath, $id);
                 if ($response) {
                     return $success = ['Imagem atualizada com sucesso'];
                 }

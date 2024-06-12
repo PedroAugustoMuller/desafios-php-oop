@@ -4,6 +4,7 @@ namespace Imply\Desafio02\DAO;
 
 use http\Exception\InvalidArgumentException;
 use Imply\Desafio02\DB\MySQL;
+use Imply\Desafio02\model\Order;
 use PDO;
 use PDOException;
 
@@ -11,101 +12,117 @@ class OrderDAO
 {
     private object $MySQL;
     private const TABLE = 'orders';
-    private const ITEMS_TABLE = 'items';
-    private const PRODUCTS_TABLE = 'products';
 
     public function __construct()
     {
         $this->MySQL = new MySQL();
     }
-    //TODO ALTERAR TODAS read
+
     public function readAllOrders()
     {
         try {
-            $stmt = "SELECT " . self::TABLE.".*, ".self::ITEMS_TABLE.".*, ". self::PRODUCTS_TABLE .".price, " . self::PRODUCTS_TABLE . ".title FROM ". self::TABLE . "
-            INNER JOIN ". self::ITEMS_TABLE. " ON " . self::TABLE . ".order_id = ". self::ITEMS_TABLE .".item_order_id
-            INNER JOIN ". self::PRODUCTS_TABLE." ON " . self::ITEMS_TABLE. ".item_product_id = ". self::PRODUCTS_TABLE .".product_id";
+            $stmt = 'SELECT * FROM ' . self::TABLE;
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->execute();
             $retorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if(empty($retorno))
-            {
+            if (empty($retorno)) {
                 throw new InvalidArgumentException("Nenhum registro encontrado");
             }
+            foreach ($retorno as &$order) {
+                $itemDAO = new ItemDAO();
+                $order['items'] = $itemDAO->listItem($order["order_id"]);
+            }
             return $retorno;
-        }catch(PDOException $PDOException)
-        {
+        } catch (PDOException $PDOException) {
             return $PDOException->getMessage();
-        }catch(InvalidArgumentException $InvalidArgumentException)
-        {
+        } catch (InvalidArgumentException $InvalidArgumentException) {
             return $InvalidArgumentException->getMessage();
         }
     }
+
     public function readOrderById(int $id)
     {
+
         try {
-            $stmt = "SELECT " . self::TABLE.".*, ".self::ITEMS_TABLE.".*, ". self::PRODUCTS_TABLE .".price, " . self::PRODUCTS_TABLE . ".title FROM ". self::TABLE . "
-            INNER JOIN ". self::ITEMS_TABLE. " ON " . self::TABLE . ".order_id = ". self::ITEMS_TABLE .".item_order_id
-            INNER JOIN ". self::PRODUCTS_TABLE." ON " . self::ITEMS_TABLE. ".item_product_id = ". self::PRODUCTS_TABLE .".product_id
-            WHERE ". self::TABLE . ".order_id = :id";
+            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE order_id = :id';
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
             $retorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if(empty($retorno))
-            {
+            if (empty($retorno)) {
                 throw new InvalidArgumentException("Nenhum registro encontrado");
             }
+            foreach ($retorno as &$order) {
+                $itemDAO = new ItemDAO();
+                $order['items'] = $itemDAO->listItem($order["order_id"]);
+            }
             return $retorno;
-        }catch(PDOException $PDOException)
-        {
+        } catch (PDOException $PDOException) {
             return $PDOException->getMessage();
-        }catch(InvalidArgumentException $InvalidArgumentException)
-        {
+        } catch (InvalidArgumentException $InvalidArgumentException) {
             return $InvalidArgumentException->getMessage();
         }
     }
+
     public function readUsersOrders(int $id)
     {
         try {
-            $stmt = "SELECT " . self::TABLE.".*, ".self::ITEMS_TABLE.".*, ". self::PRODUCTS_TABLE .".price, " . self::PRODUCTS_TABLE . ".title FROM ". self::TABLE . "
-            INNER JOIN ". self::ITEMS_TABLE. " ON " . self::TABLE . ".order_id = ". self::ITEMS_TABLE .".item_order_id
-            INNER JOIN ". self::PRODUCTS_TABLE." ON " . self::ITEMS_TABLE. ".item_product_id = ". self::PRODUCTS_TABLE .".product_id
-            WHERE ". self::TABLE . ".order_user_id = :id";
+            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE user_order_id = :id';
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
             $retorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if(empty($retorno))
-            {
+            if (empty($retorno)) {
                 throw new InvalidArgumentException("Nenhum registro encontrado");
             }
+            foreach ($retorno as &$order) {
+                $itemDAO = new ItemDAO();
+                $order['items'] = $itemDAO->listItem($order["order_id"]);
+            }
             return $retorno;
-        }catch(PDOException $PDOException)
-        {
+        } catch (PDOException $PDOException) {
             return $PDOException->getMessage();
-        }catch(InvalidArgumentException $InvalidArgumentException)
-        {
+        } catch (InvalidArgumentException $InvalidArgumentException) {
             return $InvalidArgumentException->getMessage();
         }
     }
-    public function insertOrder(Order $order)
-    {
-        $stmt = "INSERT INTO ". self::TABLE ."(order_user_id,order_date,status) VALUES
-        (:order_user_id,:order_date,:status)";
-        $stmt = $this->MySQL->getDb()->beginTransaction();
-        $stmt = $this->MySQL->getDb()->prepare($stmt);
-        $stmt->bindParam(":order_user_id", $order->getUserId());
-        $stmt->bindParam(":order_date", $order->getDate());
-        $stmt->bindParam(":status", $order->getStatus());
-        $stmt->execute();
-        if($stmt->rowCount() == 1)
-        {
-            $id = $this->MySQL->getDb()->lastInsertId();
-            foreach($order->getItems() as $item)
-            {
 
+    public function insertOrder(Order $order): bool|string
+    {
+        try {
+            $stmt = "INSERT INTO " . self::TABLE . "(order_user_id, order_date, status) 
+            VALUES (:order_user_id,:order_date,:status)";
+            $this->MySQL->getDb()->beginTransaction();
+            $stmt = $this->MySQL->getDb()->prepare($stmt);
+            $stmt->bindValue(':order_user_id', $order->getUserId());
+            $stmt->bindValue(':order_date', $order->getDate());
+            $stmt->bindValue(':status', $order->getStatusEnum());
+            $stmt->execute();
+            if ($stmt->rowCount() == 1) {
+                $id = $this->MySQL->getDb()->lastInsertId();
+                var_dump($id);
+                foreach ($order->getItems() as $item) {
+                    $itemDAO = new ItemDAO();
+                    if(!$itemDAO->insertItem($id,$item))
+                    {
+                        throw new InvalidArgumentException("Erro ao inserir item no banco");
+                    }
+                }
+                $this->MySQL->getDb()->commit();
+                return true;
             }
+            $this->MySQL->getDb()->rollBack();
+            throw new InvalidArgumentException("Não foi possível inserir o pedido");
+        }
+        catch (PDOException $PDOException)
+        {
+            $this->MySQL->getDb()->rollBack();
+            return $PDOException->getMessage();
+        }
+        catch (InvalidArgumentException $InvalidArgumentException)
+        {
+            $this->MySQL->getDb()->rollBack();
+            return $InvalidArgumentException->getMessage();
         }
     }
 }
