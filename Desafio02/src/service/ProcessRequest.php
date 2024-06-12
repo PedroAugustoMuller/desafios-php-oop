@@ -48,7 +48,8 @@ class ProcessRequest
         {
             if($this->request['resource'] == 'entrar')
             {
-                
+                $_SESSION['user_loged'] = true;
+                return "usuario logado";
             }
             if($this->request['resource'] == 'sair')
             {
