@@ -44,7 +44,7 @@ class OrderDAO
     {
 
         try {
-            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE order_id = :id AND status = 1 OR status = 3';
+            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE order_id = :id AND status = 1 OR status = 2';
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
@@ -68,7 +68,7 @@ class OrderDAO
     {
         try {
             $stmt = 'SELECT * FROM ' . self::TABLE . ' 
-            WHERE order_user_id = :id AND status = 1 OR status = 3';
+            WHERE order_user_id = :id AND status = 1 OR status = 2';
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
@@ -122,28 +122,52 @@ class OrderDAO
         }
     }
 
+    public function cancelOrderById(int $id, int $userId): bool
+    {
+        try {
+            $stmt = "UPDATE " . self::TABLE . " SET
+                    status = 3 
+                    WHERE order_id = :id AND order_user_id = :order_user_id AND status = 1 OR status = 2 ";
+            $this->MySQL->getDb()->beginTransaction();
+            $stmt = $this->MySQL->getDb()->prepare($stmt);
+            $stmt->bindParam(":id", $id);
+            $stmt->bindParam(":order_user_id", $userId);
+            $stmt->execute();
+            if ($stmt->rowCount() < 1) {
+                $this->MySQL->getDb()->rollBack();
+                throw new InvalidArgumentException("Pedido já foi cancelado");
+            }
+            $this->MySQL->getDb()->commit();
+            return "Pedido cancelado com sucesso";
+        } catch (PDOException $PDOException) {
+            $this->MySQL->getDb()->rollBack();
+            return $PDOException->getMessage();
+        } catch (InvalidArgumentException $InvalidArgumentException) {
+            $this->MySQL->getDb()->rollBack();
+            return $InvalidArgumentException->getMessage();
+        }
+    }
+
     public function softDeleteOrderById(int $id): bool
     {
         try {
-                $stmt = "UPDATE " . self::TABLE . " SET
-                    status = 2 
-                    WHERE order_id = :id AND status = 1 OR status = 3";
-                $this->MySQL->getDb()->beginTransaction();
-                $stmt = $this->MySQL->getDb()->prepare($stmt);
-                $stmt->bindParam(":id", $id);
-                $stmt->execute();
-                if ($stmt->rowCount() < 1) {
-                    $this->MySQL->getDb()->rollBack();
-                    throw new InvalidArgumentException("Pedido já foi desativado");
-                }
-                $this->MySQL->getDb()->commit();
-                return true;
-        }catch(PDOException $PDOException)
-        {
+            $stmt = "UPDATE " . self::TABLE . " SET
+                    status = 4 
+                    WHERE order_id = :id AND status = 1 OR status = 2";
+            $this->MySQL->getDb()->beginTransaction();
+            $stmt = $this->MySQL->getDb()->prepare($stmt);
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+            if ($stmt->rowCount() < 1) {
+                $this->MySQL->getDb()->rollBack();
+                throw new InvalidArgumentException("Pedido já foi desativado");
+            }
+            $this->MySQL->getDb()->commit();
+            return true;
+        } catch (PDOException $PDOException) {
             $this->MySQL->getDb()->rollBack();
             return $PDOException->getMessage();
-        }catch(InvalidArgumentException $InvalidArgumentException)
-        {
+        } catch (InvalidArgumentException $InvalidArgumentException) {
             $this->MySQL->getDb()->rollBack();
             return $InvalidArgumentException->getMessage();
         }

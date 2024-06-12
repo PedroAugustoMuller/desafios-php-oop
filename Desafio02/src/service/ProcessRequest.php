@@ -173,7 +173,16 @@ class ProcessRequest
         if($this->request['route'] == 'pedidos')
         {
             $orderDAO = new OrderDAO();
-            return $orderDAO->softDeleteOrderById($this->request['filter']);
+            if($this->request['resource'] == 'excluir')
+            {
+                return $orderDAO->softDeleteOrderById($this->request['filter']);
+            }
+            if($this->request['resource'] == 'cancelar')
+            {
+                //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
+                return $orderDAO->cancelOrderById($this->request['filter'],2);
+                //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
+            }
         }
         if ($this->request['route'] == 'produtos')
         {

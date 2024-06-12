@@ -32,7 +32,7 @@ CREATE TABLE orders(
 	order_id INT(11) NOT NULL AUTO_INCREMENT,
 	order_user_id INT (11),
 	order_date DATE,
-	status ENUM('On Going','Canceled','Finished'),
+	status ENUM('On Going','Delivered','Cancelled','Inactive'),
 	PRIMARY KEY (order_id),
 	FOREIGN KEY (order_user_id) REFERENCES users(user_id)
 );
@@ -82,15 +82,13 @@ INSERT INTO items(item_order_id,item_product_id,quantity) VALUES
 	(8,1,10);
 INSERT INTO items(item_order_id,item_product_id,quantity) VALUES
     (7,1,10);
+    
+DROP TABLE items;
+DROP TABLE orders;
 
-SELECT * FROM products;
-SELECT * FROM ratings;
+UPDATE orders set status = 2 where order_id = 1;
 
+select * from orders;
 
-
-
-
-
-
-
-ø
+ALTER TABLE orders
+MODIFY COLUMN status ENUM('On Going', 'Delivered', 'Cancelled');
