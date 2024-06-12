@@ -32,13 +32,13 @@ class controller
     public function treatRequest()
     {
         try {
+            $jsonUtil = new JsonUtil();
             $route = RoutesUtil::getRoutes();
             if ($route instanceof Exception) {
-                throw $route;
+                return $jsonUtil->processArray($route->getMessage());
             }
             $processRequest = new ProcessRequest($route);
             $data = $processRequest->processRequest();
-            $jsonUtil = new JsonUtil();
             return $jsonUtil->processArray($data);
         } catch (InvalidArgumentException $invalidArgumentException) {
             return $invalidArgumentException;

@@ -20,11 +20,11 @@ class ItemDAO
         $this->MySQL = new MySQL();
     }
 
-    public function insertItem(int $id, Item $item)
+    public function insertItem(int $id, Item $item): bool|string
     {
         try {
-            $stmt = 'INSERT INTO ' . self::TABLE_NAME . '(item_order_id,item_product_id,quantity) VALUES(
-                :item_order_id, :item_product_id, :quantity)';
+            $stmt = 'INSERT INTO ' . self::TABLE_NAME . ' (item_order_id,item_product_id,quantity) 
+            VALUES(:item_order_id, :item_product_id, :quantity)';
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindValue(':item_order_id', $id);
@@ -38,8 +38,10 @@ class ItemDAO
             $this->MySQL->getDb()->rollBack();
             throw new InvalidArgumentException("Não foi possível cadastrar o item");
         } catch (PDOException $PDOException) {
+            $this->MySQL->getDb()->rollBack();
             return $PDOException->getMessage();
         } catch (Exception $exception) {
+            $this->MySQL->getDb()->rollBack();
             return $exception->getMessage();
         }
     }

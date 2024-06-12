@@ -2,7 +2,7 @@
 
 namespace Imply\Desafio02\DAO;
 
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Imply\Desafio02\DB\MySQL;
 use Imply\Desafio02\model\Order;
 use PDO;
@@ -44,7 +44,7 @@ class OrderDAO
     {
 
         try {
-            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE order_id = :id';
+            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE order_id = :id AND status = 1 OR status = 3';
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
@@ -67,7 +67,8 @@ class OrderDAO
     public function readUsersOrders(int $id)
     {
         try {
-            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE user_order_id = :id';
+            $stmt = 'SELECT * FROM ' . self::TABLE . ' 
+            WHERE order_user_id = :id AND status = 1 OR status = 3';
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindParam(":id", $id);
             $stmt->execute();
@@ -98,28 +99,50 @@ class OrderDAO
             $stmt->bindValue(':order_date', $order->getDate());
             $stmt->bindValue(':status', $order->getStatusEnum());
             $stmt->execute();
-            if ($stmt->rowCount() == 1) {
-                $id = $this->MySQL->getDb()->lastInsertId();
-                var_dump($id);
-                foreach ($order->getItems() as $item) {
-                    $itemDAO = new ItemDAO();
-                    if(!$itemDAO->insertItem($id,$item))
-                    {
-                        throw new InvalidArgumentException("Erro ao inserir item no banco");
-                    }
+            if ($stmt->rowCount() < 1) {
+                $this->MySQL->getDb()->rollBack();
+                throw new InvalidArgumentException("Não foi possível inserir o pedido");
+            }
+            $id = $this->MySQL->getDb()->lastInsertId();
+            $this->MySQL->getDb()->commit();
+            foreach ($order->getItems() as $item) {
+                $itemDAO = new ItemDAO();
+                $resultado = $itemDAO->insertItem($id, $item);
+                if (!$resultado) {
+                    throw new InvalidArgumentException("Erro ao inserir item no banco");
+                }
+            }
+            return true;
+        } catch (PDOException $PDOException) {
+            $this->MySQL->getDb()->rollBack();
+            return $PDOException->getMessage();
+        } catch (InvalidArgumentException $InvalidArgumentException) {
+            $this->MySQL->getDb()->rollBack();
+            return $InvalidArgumentException->getMessage();
+        }
+    }
+
+    public function softDeleteOrderById(int $id): bool
+    {
+        try {
+                $stmt = "UPDATE " . self::TABLE . " SET
+                    status = 2 
+                    WHERE order_id = :id AND status = 1 OR status = 3";
+                $this->MySQL->getDb()->beginTransaction();
+                $stmt = $this->MySQL->getDb()->prepare($stmt);
+                $stmt->bindParam(":id", $id);
+                $stmt->execute();
+                if ($stmt->rowCount() < 1) {
+                    $this->MySQL->getDb()->rollBack();
+                    throw new InvalidArgumentException("Pedido já foi desativado");
                 }
                 $this->MySQL->getDb()->commit();
                 return true;
-            }
-            $this->MySQL->getDb()->rollBack();
-            throw new InvalidArgumentException("Não foi possível inserir o pedido");
-        }
-        catch (PDOException $PDOException)
+        }catch(PDOException $PDOException)
         {
             $this->MySQL->getDb()->rollBack();
             return $PDOException->getMessage();
-        }
-        catch (InvalidArgumentException $InvalidArgumentException)
+        }catch(InvalidArgumentException $InvalidArgumentException)
         {
             $this->MySQL->getDb()->rollBack();
             return $InvalidArgumentException->getMessage();

@@ -41,7 +41,13 @@ class ProcessRequest
             if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
                 return $orderDAO->readOrderById($this->request['filter']);
             }
-            return $orderDAO->readAllOrders();
+            if($this->request['filter'] == 'admin')
+            {
+                return $orderDAO->readAllOrders();
+            }
+            //TODO MUDAR PARA VARIÁVEL QUE ARMAZENA O ID DO USUÁRIO NA HORA DE LOGAR
+            return $orderDAO->readUsersOrders(2);
+            //TODO MUDAR PARA VARIÁVEL QUE ARMAZENA O ID DO USUÁRIO NA HORA DE LOGAR
         }
         if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
@@ -53,6 +59,7 @@ class ProcessRequest
             }
             return $productDAO->readAllProducts();
         }
+        return 'método inválido';
     }
 
     private function post()
@@ -82,7 +89,7 @@ class ProcessRequest
                     }
                     //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
                     $orderUserId = $this->dataRequest['order_user_id'];
-                    //TODO
+                    //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
                     $orderdate = new DateTime($this->dataRequest['order_date']);
                     $status = $this->dataRequest['status'];
                     $order = new Order(0, $orderUserId, $orderdate, $status,$items);
@@ -111,6 +118,7 @@ class ProcessRequest
                 return $error = ['Erro ao inserir Produto'];
             }
         }
+        return 'método inválido';
     }
 
     private function put()
@@ -157,25 +165,35 @@ class ProcessRequest
             }
             return ["recurso inexistente"];
         }
+        return 'método inválido';
     }
 
     private function delete()
     {
-        $productDAO = new ProductDAO();
-        $response = false;
-        $error = ['Erro na operação'];
-        if ($this->request['resource'] == 'reativar') {
-            $id = $this->request['filter'];
-            $response = $productDAO->reactivateProduct($id);
-            $result = ['Produto reativado com sucesso'];
+        if($this->request['route'] == 'pedidos')
+        {
+            $orderDAO = new OrderDAO();
+            return $orderDAO->softDeleteOrderById($this->request['filter']);
         }
-        if ($this->request['resource'] == 'excluir') {
-            $response = $productDAO->deleteProduct($this->request['filter']);
-            $result = ['Produto desativado com sucesso'];
+        if ($this->request['route'] == 'produtos')
+        {
+            $productDAO = new ProductDAO();
+            $response = false;
+            $error = ['Erro na operação'];
+            if ($this->request['resource'] == 'reativar') {
+                $id = $this->request['filter'];
+                $response = $productDAO->reactivateProduct($id);
+                $result = ['Produto reativado com sucesso'];
+            }
+            if ($this->request['resource'] == 'excluir') {
+                $response = $productDAO->deleteProduct($this->request['filter']);
+                $result = ['Produto desativado com sucesso'];
+            }
+            if ($response) {
+                return $result;
+            }
+            return $error;
         }
-        if ($response) {
-            return $result;
-        }
-        return $error;
+        return 'método inválido';
     }
 }
