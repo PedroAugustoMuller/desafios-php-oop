@@ -2,6 +2,8 @@
 
 namespace Imply\Desafio02\service;
 session_start();
+
+use Imply\Desafio02\DAO\OrderDAO;
 use Imply\Desafio02\DAO\ProductDAO;
 use Imply\Desafio02\DAO\ReviewDAO;
 use Imply\Desafio02\model\Product;
@@ -32,14 +34,25 @@ class ProcessRequest
 
     public function get()
     {
-        $productDAO = new ProductDAO();
-        if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
-            return $productDAO->readProductById($this->request['filter']);
+        if($this->request['route'] == 'pedidos')
+        {
+            $orderDAO = new OrderDAO();
+            if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
+                return $orderDAO->readOrderById($this->request['filter']);
+            }
+            return $orderDAO->readAllOrders();
         }
-        if ($this->request['filter']) {
-            return $productDAO->readInactiveProducts();
+        if($this->request['route'] == 'produtos')
+        {
+            $productDAO = new ProductDAO();
+            if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
+                return $productDAO->readProductById($this->request['filter']);
+            }
+            if ($this->request['filter']) {
+                return $productDAO->readInactiveProducts();
+            }
+            return $productDAO->readAllProducts();
         }
-        return $productDAO->readAllProducts();
     }
 
     private function post()

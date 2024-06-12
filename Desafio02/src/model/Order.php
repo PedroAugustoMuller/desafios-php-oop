@@ -4,7 +4,7 @@ namespace Imply\Desafio02\model;
 
 use DateTime;
 
-class Pedido
+class Order
 {
     private int $id;
     private int $user_id;

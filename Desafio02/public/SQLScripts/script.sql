@@ -28,24 +28,23 @@ CREATE TABLE users(
     PRIMARY KEY (user_id)
 );
 
-select * from users;
-
-CREATE TABLE pedidos(
-	pedido_id INT(11) NOT NULL AUTO_INCREMENT,
-    pedido_user_id INT (11),
-    date_pedido DATE,
-    PRIMARY KEY (pedido_id),
-    FOREIGN KEY (pedido_user_id) REFERENCES users(user_id)
+CREATE TABLE orders(
+	order_id INT(11) NOT NULL AUTO_INCREMENT,
+    order_user_id INT (11),
+    order_date DATE,
+    status ENUM('On Going','Canceled','Finished');
+    PRIMARY KEY (order_id),
+    FOREIGN KEY (order_user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE items(
 	item_id INT(11) NOT NULL AUTO_INCREMENT,
-	item_pedido_id INT(11),
-    item_produto_id INT(11),
+	item_order_id INT(11),
+    item_product_id INT(11),
     quantity INT(11),
     PRIMARY KEY (item_id),
-    FOREIGN KEY (item_pedido_id) REFERENCES pedidos(pedido_id),
-    FOREIGN KEY (item_produto_id) REFERENCES products(product_id)
+    FOREIGN KEY (item_order_id) REFERENCES pedidos(order_id),
+    FOREIGN KEY (item_product_id) REFERENCES products(product_id)
 );
 
 INSERT INTO products (title,price,description,category,image) VALUES
