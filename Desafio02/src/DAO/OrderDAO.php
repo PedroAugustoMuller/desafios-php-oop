@@ -113,7 +113,7 @@ class OrderDAO
                     throw new InvalidArgumentException("Erro ao inserir item no banco");
                 }
             }
-            return true;
+            return "Pedido criado com sucesso";
         } catch (PDOException $PDOException) {
             $this->MySQL->getDb()->rollBack();
             return $PDOException->getMessage();

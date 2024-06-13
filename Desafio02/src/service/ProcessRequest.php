@@ -81,9 +81,10 @@ class ProcessRequest
             $userDao = new UserDAO();
             if ($this->request['resource'] == 'entrar') {
                 $indexes = ['login','password'];
-                if(!$this->validateArrays($indexes))
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
                 {
-                    return "Nem todos os dados foram preenchidos";
+                    return $validation;
                 }
                 $response = $userDao->userLogin($this->dataRequest['login'],$this->dataRequest['password']);
                 if(!is_array($response))
@@ -102,6 +103,12 @@ class ProcessRequest
                     if (isset($this->dataRequest['items'])) {
                         $items = array();
                         foreach ($this->dataRequest['items'] as $item) {
+                            $indexes = ['item_product_id','quantity','price','title'];
+                            $validation = $this->validateArraysItem($indexes,$item);
+                            if($validation !== true)
+                            {
+                                return $validation;
+                            }
                             $productId = $item['item_product_id'];
                             $quantity = $item['quantity'];
                             $price = $item['price'];
@@ -119,8 +126,12 @@ class ProcessRequest
         if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
             if ($this->request['resource'] == 'criar') {
-                $error = 'Nem todos os dados foram preenchidos';
-                try {
+                $indexes = ['title','description','price','category'];
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
+                {
+                    return $validation;
+                }
                     $title = $this->dataRequest['title'];
                     $price = (float)$this->dataRequest['price'];
                     $description = $this->dataRequest['description'];
@@ -134,10 +145,6 @@ class ProcessRequest
                         return ['Produto inserido com sucesso - id: ' . $response];
                     }
                     $error = 'Erro ao inserir Produto';
-                } catch (Exception $exception) {
-                    return $exception->getMessage();
-                }
-                return $error;
             }
         }
         return 'método inválido';
@@ -149,9 +156,10 @@ class ProcessRequest
             $productDAO = new ProductDAO();
             if ($this->request['resource'] == 'atualizar') {
                 $indexes = ['title', 'price', 'description', 'category', 'image'];
-                if(!$this->validateArrays($indexes))
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
                 {
-                    return "Nem todos os indexes foram preenchidos";
+                    return $validation;
                 }
                 $id = $this->request['filter'];
                 $title = $this->dataRequest['title'];
@@ -168,9 +176,10 @@ class ProcessRequest
             }
             if ($this->request['resource'] == 'imagem') {
                 $indexes = ['image'];
-                if(!$this->validateArrays($indexes))
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
                 {
-                    return "Imagem não foi definida";
+                    return $validation;
                 }
                 $id = $this->request['filter'];
                 $imageData = $this->dataRequest['image'];
@@ -191,9 +200,10 @@ class ProcessRequest
             $reviewDAO = new ReviewDAO();
             if ($this->request['resource'] == 'atualizar') {
                 $indexes = ['product_id','rate','count'];
-                if(!$this->validateArrays($indexes))
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
                 {
-                    return "Nem todos os indexes foram preenchidos";
+                    return $validation;
                 }
                 $reviewData['review_product_id'] = $this->dataRequest['product_id'];
                 $reviewData['rate'] = $this->dataRequest['rate'];
@@ -243,11 +253,24 @@ class ProcessRequest
         return 'método inválido';
     }
 
-    private function validateArrays(array $indexes) : bool
+    private function validateArrays(array $indexes) : array|bool
     {
         foreach ($indexes as $index) {
             if (!isset($this->dataRequest[$index])) {
-                return false;
+                $response =['Indexes Necessários' =>
+                    $indexes];
+                return $response;
+            }
+        }
+        return true;
+    }
+    private function validateArraysItem(array $indexes, array $item) : array|bool
+    {
+        foreach ($indexes as $index) {
+            if (!isset($item[$index])) {
+                $response =['Indexes Necessários' =>
+                    $indexes];
+                return $response;
             }
         }
         return true;

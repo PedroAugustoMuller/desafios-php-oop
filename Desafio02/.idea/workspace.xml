@@ -6,12 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/SQLScripts/script.sql" beforeDir="false" afterPath="$PROJECT_DIR$/public/SQLScripts/script.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/scripts/script.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/ReviewDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/ReviewDAO.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/controller.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO/OrderDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/OrderDAO.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/ProcessRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ProcessRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/view.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/view.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
