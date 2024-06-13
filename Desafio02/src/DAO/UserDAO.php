@@ -20,7 +20,7 @@ class UserDAO
     public function userLogin($login, $password)
     {
         try {
-            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE login = :login';
+            $stmt = 'SELECT * FROM ' . self::TABLE . ' WHERE login = :login LIMIT 1';
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindValue(':login', $login);
             $stmt->execute();

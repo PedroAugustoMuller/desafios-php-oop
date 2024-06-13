@@ -12,11 +12,11 @@ function createTableRow($products) : void
     foreach ($products as $product) {
         if(!empty($product->getImage()))
         {
-            $image = "<td><img src='" . $product->getImage() . "' alt='product-image' class='img-thumbnail'</td>";
+            $image = "<td><img style='max-width: 200px; height: auto' src='" . $product->getImage() . "' alt='product-image' class='img-thumbnail'</td>";
         }
         else
         {
-            $image = "<td><img src='../../public/images/products/default-product-image.png' alt='product-image' class='img-thumbnail'</td>";
+            $image = "<td><img  src='../../public/images/products/default-product-image.png' alt='product-image' class='img-thumbnail'></td>";
         }
         echo "<tr>";
         echo "<td>" . $product->getId() . "</td>";

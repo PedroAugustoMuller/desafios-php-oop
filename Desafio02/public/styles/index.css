@@ -1,3 +1,8 @@
 body {
     background: #212529;
 }
+
+.img-thumbnail{
+    max-width: 100px;
+    height: auto;
+}
