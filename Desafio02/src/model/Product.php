@@ -22,7 +22,7 @@ class Product
         $this->image = $image;
     }
 
-    public function setReview(Review $review)
+    public function setReview(Review $review): void
     {
         $this->review = $review;
     }

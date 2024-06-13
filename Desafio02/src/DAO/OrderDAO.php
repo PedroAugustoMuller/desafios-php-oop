@@ -109,6 +109,7 @@ class OrderDAO
                 $itemDAO = new ItemDAO();
                 $resultado = $itemDAO->insertItem($id, $item);
                 if (!$resultado) {
+                    $this->MySQL->getDb()->rollBack();
                     throw new InvalidArgumentException("Erro ao inserir item no banco");
                 }
             }
@@ -117,7 +118,6 @@ class OrderDAO
             $this->MySQL->getDb()->rollBack();
             return $PDOException->getMessage();
         } catch (InvalidArgumentException $InvalidArgumentException) {
-            $this->MySQL->getDb()->rollBack();
             return $InvalidArgumentException->getMessage();
         }
     }
@@ -143,7 +143,6 @@ class OrderDAO
             $this->MySQL->getDb()->rollBack();
             return $PDOException->getMessage();
         } catch (InvalidArgumentException $InvalidArgumentException) {
-            $this->MySQL->getDb()->rollBack();
             return $InvalidArgumentException->getMessage();
         }
     }

@@ -36,18 +36,18 @@ class Order
     {
         return $this->date->format('Y-m-d');
     }
+
     public function getStatus(): string
     {
         return $this->status;
     }
-    public function getStatusEnum() : int
+
+    public function getStatusEnum(): int
     {
-        if($this->getStatus() == 'On Going')
-        {
+        if ($this->getStatus() == 'On Going') {
             return 1;
         }
-        if($this->getStatus() == 'Completed')
-        {
+        if ($this->getStatus() == 'Completed') {
             return 2;
         }
         return 3;
@@ -58,11 +58,10 @@ class Order
         return $this->items;
     }
 
-    public function getValue()
+    public function getValue(): int
     {
         $value = 0;
-        foreach ($this->items as $item)
-        {
+        foreach ($this->items as $item) {
             $value += $item->getValueOfItem();
         }
         return $value;

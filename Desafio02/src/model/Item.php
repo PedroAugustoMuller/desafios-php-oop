@@ -46,11 +46,13 @@ class Item
     {
         return $this->price;
     }
+
     public function getTitle(): string
     {
         return $this->title;
     }
-    public function getValueOfItem():float
+
+    public function getValueOfItem(): float
     {
         return $this->price * $this->quantity;
     }

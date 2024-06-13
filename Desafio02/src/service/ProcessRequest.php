@@ -1,16 +1,18 @@
 <?php
 
 namespace Imply\Desafio02\service;
-session_start();
 
 use DateTime;
+use Exception;
 use Imply\Desafio02\DAO\OrderDAO;
 use Imply\Desafio02\DAO\ProductDAO;
 use Imply\Desafio02\DAO\ReviewDAO;
+use Imply\Desafio02\DAO\UserDAO;
 use Imply\Desafio02\model\Item;
 use Imply\Desafio02\model\Order;
 use Imply\Desafio02\model\Product;
 use Imply\Desafio02\Util\JsonUtil;
+use TypeError;
 
 class ProcessRequest
 {
@@ -24,11 +26,16 @@ class ProcessRequest
 
     public function processRequest()
     {
-        if ((!isset($_SESSION['user_loged']) || $_SESSION['user_loged'] === false) && $this->request['route'] != 'user') {
+        if ((!isset($_SESSION['user_loged']) || $_SESSION['user_loged'] === false) && $this->request['route'] != 'user' ) {
             return ['usuário não logado, acesse user-entrar'];
         }
         if ($this->request['method'] != 'GET' && $this->request['method'] != 'DELETE') {
-            $this->dataRequest = JsonUtil::treatJsonBody();
+            try {
+                $this->dataRequest = JsonUtil::treatJsonBody();
+            } catch (TypeError) {
+                return 'dado inválido ou não preenchido';
+            }
+
         }
         $method = $this->request['method'];
         return $this->$method();
@@ -36,25 +43,31 @@ class ProcessRequest
 
     public function get()
     {
+        if($this->request['route'] == 'user')
+        {
+            if ($this->request['resource'] == 'sair') {
+                $_SESSION['user_loged'] = false;
+                $_SESSION['user_permission'] = 'client';
+                $_SESSION['user_id'] = false ;
+                return 'saindo do usuário';
+            }
+        }
         if ($this->request['route'] == 'pedidos') {
             $orderDAO = new OrderDAO();
             if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
                 return $orderDAO->readOrderById($this->request['filter']);
             }
-            if($this->request['filter'] == 'admin')
-            {
+            if ($this->request['resource'] == 'listarAll') {
                 return $orderDAO->readAllOrders();
             }
-            //TODO MUDAR PARA VARIÁVEL QUE ARMAZENA O ID DO USUÁRIO NA HORA DE LOGAR
-            return $orderDAO->readUsersOrders(2);
-            //TODO MUDAR PARA VARIÁVEL QUE ARMAZENA O ID DO USUÁRIO NA HORA DE LOGAR
+            return $orderDAO->readUsersOrders($_SESSION['user_id']);
         }
         if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
             if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
                 return $productDAO->readProductById($this->request['filter']);
             }
-            if ($this->request['filter']) {
+            if ($this->request['resource'] == 'inativos') {
                 return $productDAO->readInactiveProducts();
             }
             return $productDAO->readAllProducts();
@@ -65,13 +78,17 @@ class ProcessRequest
     private function post()
     {
         if ($this->request['route'] == 'user') {
+            $userDao = new UserDAO();
             if ($this->request['resource'] == 'entrar') {
+                $response = $userDao->userLogin($this->dataRequest['login'],$this->dataRequest['password']);
+                if(!is_array($response))
+                {
+                    return $response;
+                }
+                $_SESSION['user_id'] = $response['user_id'];
+                $_SESSION['user_permission'] = $response['access'];
                 $_SESSION['user_loged'] = true;
-                return "usuario logado";
-            }
-            if ($this->request['resource'] == 'sair') {
-                $_SESSION['user_loged'] = false;
-                return 'saindo do usuário';
+                return 'Usuário logado com sucesso';
             }
         }
         if ($this->request['route'] == 'pedidos') {
@@ -79,21 +96,24 @@ class ProcessRequest
             if ($this->request['resource'] == 'criar') {
                 $error = ['Nem todos os dados foram preenchdios'];
                 try {
-                    $items = array();
-                    foreach ($this->dataRequest['items'] as $item) {
-                        $productId = $item['item_product_id'];
-                        $quantity = $item['quantity'];
-                        $price = $item['price'];
-                        $title = $item['title'];
-                        $items[] = new Item(0, 0, $productId, $quantity, $price, $title);
+                    if (isset($this->dataRequest['items'])) {
+                        $items = array();
+                        foreach ($this->dataRequest['items'] as $item) {
+                            $productId = $item['item_product_id'];
+                            $quantity = $item['quantity'];
+                            $price = $item['price'];
+                            $title = $item['title'];
+                            $items[] = new Item(0, 0, $productId, $quantity, $price, $title);
+                        }
+                        $orderUserId = $_SESSION['user_id'];
+                        $orderdate = new DateTime($this->dataRequest['order_date']);
+                        $status = $this->dataRequest['status'];
+                        $order = new Order(0, $orderUserId, $orderdate, $status, $items);
+                        return $orderDAO->insertOrder($order);
                     }
-                    //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
-                    $orderUserId = $this->dataRequest['order_user_id'];
-                    //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
-                    $orderdate = new DateTime($this->dataRequest['order_date']);
-                    $status = $this->dataRequest['status'];
-                    $order = new Order(0, $orderUserId, $orderdate, $status,$items);
-                    return $orderDAO->insertOrder($order);
+
+                } catch (TypeError $typeError) {
+                    return $typeError->getMessage();
                 } catch (Exception $exception) {
                     return $exception->getMessage();
                 }
@@ -103,19 +123,25 @@ class ProcessRequest
         if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
             if ($this->request['resource'] == 'criar') {
-                $title = $this->dataRequest['title'];
-                $price = (float)$this->dataRequest['price'];
-                $description = $this->dataRequest['description'];
-                $category = $this->dataRequest['category'];
-                $image = $this->dataRequest['image'];
-                $produto = new Product(0, $title, $price, $description, $category, $image);
-                $response = $productDAO->insertProduct($produto);
-                if ($response > 0) {
-                    $reviewDAO = new ReviewDAO();
-                    $reviewDAO->insertIntoReview($response);
-                    return $success = ['Produto inserido com sucesso - id: ' . $response];
+                $error = 'Nem todos os dados foram preenchidos';
+                try {
+                    $title = $this->dataRequest['title'];
+                    $price = (float)$this->dataRequest['price'];
+                    $description = $this->dataRequest['description'];
+                    $category = $this->dataRequest['category'];
+                    $image = $this->dataRequest['image'];
+                    $produto = new Product(0, $title, $price, $description, $category, $image);
+                    $response = $productDAO->insertProduct($produto);
+                    if ($response > 0) {
+                        $reviewDAO = new ReviewDAO();
+                        $reviewDAO->insertIntoReview($response);
+                        return ['Produto inserido com sucesso - id: ' . $response];
+                    }
+                    $error = 'Erro ao inserir Produto';
+                } catch (Exception $exception) {
+                    return $exception->getMessage();
                 }
-                return $error = ['Erro ao inserir Produto'];
+                return $error;
             }
         }
         return 'método inválido';
@@ -144,9 +170,13 @@ class ProcessRequest
                 $imageData = $this->dataRequest['image'];
                 $treatProductImage = new treatProductImage($id, $imageData);
                 $imagePath = $treatProductImage->saveImage();
+                if($imagePath instanceof Exception)
+                {
+                    return $imagePath;
+                }
                 $response = $productDAO->setProductImage($imagePath, $id);
                 if ($response) {
-                    return $success = ['Imagem atualizada com sucesso'];
+                    return 'Imagem atualizada com sucesso';
                 }
                 return ['Erro ao atualizar Imagem'];
             }
@@ -170,22 +200,18 @@ class ProcessRequest
 
     private function delete()
     {
-        if($this->request['route'] == 'pedidos')
-        {
+        if ($this->request['route'] == 'pedidos') {
             $orderDAO = new OrderDAO();
-            if($this->request['resource'] == 'excluir')
-            {
+            if ($this->request['resource'] == 'excluir') {
                 return $orderDAO->softDeleteOrderById($this->request['filter']);
             }
-            if($this->request['resource'] == 'cancelar')
-            {
+            if ($this->request['resource'] == 'cancelar') {
                 //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
-                return $orderDAO->cancelOrderById($this->request['filter'],2);
+                return $orderDAO->cancelOrderById($this->request['filter'], 2);
                 //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
             }
         }
-        if ($this->request['route'] == 'produtos')
-        {
+        if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
             $response = false;
             $error = ['Erro na operação'];

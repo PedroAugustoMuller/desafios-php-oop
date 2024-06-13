@@ -14,10 +14,6 @@ use InvalidArgumentException;
 
 class controller
 {
-    /**
-     * @param int $id
-     * @return array|null
-     */
     public function getProductsFromDb()
     {
         $productDAO = new ProductDAO();
@@ -25,10 +21,6 @@ class controller
         return $this->createProductsArray($products);
     }
 
-    /**
-     * @return Exception|InvalidArgumentException
-     * @throws Exception
-     */
     public function treatRequest()
     {
         try {
