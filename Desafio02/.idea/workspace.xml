@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/ReviewDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/ReviewDAO.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/controller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/ProcessRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ProcessRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/treatProductImage.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/treatProductImage.php" afterDir="false" />
-    </list>
+    <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,25 +41,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;PHP Script.ItemDAO.php.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Desafio03&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Pichau/Documents/Programacao/Imply/php-oop&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "PHP Script.ItemDAO.php.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "Apresentacao",
+    "last_opened_file_path": "C:/Users/Pichau/Documents/Programacao/Imply/php-oop",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Pichau\Documents\Programacao\Imply\php-oop\Desafio02" />
