@@ -26,7 +26,7 @@ class ProcessRequest
 
     public function processRequest()
     {
-        if ((!isset($_SESSION['user_loged']) || $_SESSION['user_loged'] === false) && $this->request['route'] != 'user' ) {
+        if ((!isset($_SESSION['user_logged']) || $_SESSION['user_logged'] === false) && $this->request['route'] != 'user' ) {
             return ['usuário não logado, acesse user-entrar'];
         }
         if ($this->request['method'] != 'GET' && $this->request['method'] != 'DELETE') {
@@ -46,7 +46,7 @@ class ProcessRequest
         if($this->request['route'] == 'user')
         {
             if ($this->request['resource'] == 'sair') {
-                $_SESSION['user_loged'] = false;
+                $_SESSION['user_logged'] = false;
                 $_SESSION['user_permission'] = 'client';
                 $_SESSION['user_id'] = false ;
                 return 'saindo do usuário';
@@ -93,7 +93,7 @@ class ProcessRequest
                 }
                 $_SESSION['user_id'] = $response['user_id'];
                 $_SESSION['user_permission'] = $response['access'];
-                $_SESSION['user_loged'] = true;
+                $_SESSION['user_logged'] = true;
                 return 'Usuário logado com sucesso';
             }
         }
@@ -227,9 +227,7 @@ class ProcessRequest
                 return $orderDAO->softDeleteOrderById($this->request['filter']);
             }
             if ($this->request['resource'] == 'cancelar') {
-                //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
-                return $orderDAO->cancelOrderById($this->request['filter'], 2);
-                //TODO SUBSTITUIR DATAREQUEST['ORDER_USER_ID'] POR UMA VARIÁVEL SALVA EM $_SESSION OU TOKEN
+                return $orderDAO->cancelOrderById($this->request['filter'], $_SESSION['user_id']);
             }
         }
         if ($this->request['route'] == 'produtos') {
@@ -256,10 +254,9 @@ class ProcessRequest
     private function validateArrays(array $indexes) : array|bool
     {
         foreach ($indexes as $index) {
-            if (!isset($this->dataRequest[$index])) {
-                $response =['Indexes Necessários' =>
+            if (!isset($this->dataRequest[$index]) || empty($this->dataRequest[$index])) {
+                return ['Indexes Necessários' =>
                     $indexes];
-                return $response;
             }
         }
         return true;
@@ -267,10 +264,9 @@ class ProcessRequest
     private function validateArraysItem(array $indexes, array $item) : array|bool
     {
         foreach ($indexes as $index) {
-            if (!isset($item[$index])) {
-                $response =['Indexes Necessários' =>
+            if (!isset($this->dataRequest[$index]) || empty($this->dataRequest[$index])){
+                return ['Indexes Necessários' =>
                     $indexes];
-                return $response;
             }
         }
         return true;

@@ -32,7 +32,7 @@ class treatProductImage
         $newDirpath = '../public/images/products';
         $fileExtension = preg_split('#(/|;)#', $targetFileData[0]);
         $newFilePath = $newDirpath . '/' . $this->productId . '.' . $fileExtension[1];
-        if(!in_array($fileExtension, $imageFiles))
+        if(!in_array($fileExtension[1], $imageFiles))
         {
             return new InvalidArgumentException("Extensão de arquivo inválida");
         }

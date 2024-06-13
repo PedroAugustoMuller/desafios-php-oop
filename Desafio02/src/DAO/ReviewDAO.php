@@ -44,14 +44,14 @@ class ReviewDAO
     {
         try {
             $stmt = 'UPDATE '. self::TABLE. ' SET
-                        rate = :rate,
-                        count = :count
-                        WHERE review_product_id = :review_product_id';
+                rate = :rate,
+                count = :count
+                WHERE review_product_id = :review_product_id';
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindValue(':rate', $reviewData['rate']);
             $stmt->bindValue(':count', $reviewData['count']);
-            $stmt->bindValue(':review_product_id', 1);
+            $stmt->bindValue(':review_product_id', $reviewData['review_product_id']);
             $stmt->execute();
             if ($stmt->rowCount() == 1) {
                 $this->MySQL->getDb()->commit();

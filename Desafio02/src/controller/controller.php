@@ -37,7 +37,7 @@ class controller
         }
     }
 
-    private function createProductsArray(array $productsData): ?array
+    private function createProductsArray($productsData): ?array
     {
         if (empty($productsData)) {
             return null;
