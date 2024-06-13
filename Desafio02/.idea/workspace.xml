@@ -5,23 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d39d2d48-0576-46b9-a275-cc20321035ba" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/scripts/script.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/OrderDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/OrderDAO.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/ProductDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/ProductDAO.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/SQLScripts/script.sql" beforeDir="false" afterPath="$PROJECT_DIR$/public/SQLScripts/script.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/scripts/script.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO/ReviewDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/ReviewDAO.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO/UserDAO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO/UserDAO.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/ConstantsUtil.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/ConstantsUtil.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/JsonUtil.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/JsonUtil.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/RoutesUtil.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/RoutesUtil.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/controller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Item.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Item.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Review.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Review.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/FakeStoreAPI.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/FakeStoreAPI.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/ProcessRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ProcessRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/treatProductImage.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/treatProductImage.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/view/view.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/view.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

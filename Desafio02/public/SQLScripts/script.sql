@@ -79,16 +79,8 @@ INSERT INTO items(item_order_id,item_product_id,quantity) VALUES
 	(5,1,10),
 	(6,1,10),
 	(7,1,10),
-	(8,1,10);
-INSERT INTO items(item_order_id,item_product_id,quantity) VALUES
+	(8,1,10),
     (7,1,10);
     
-DROP TABLE items;
-DROP TABLE orders;
+    
 
-UPDATE orders set status = 2 where order_id = 1;
-
-select * from orders;
-
-ALTER TABLE orders
-MODIFY COLUMN status ENUM('On Going', 'Delivered', 'Cancelled');

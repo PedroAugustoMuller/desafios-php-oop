@@ -80,6 +80,11 @@ class ProcessRequest
         if ($this->request['route'] == 'user') {
             $userDao = new UserDAO();
             if ($this->request['resource'] == 'entrar') {
+                $indexes = ['login','password'];
+                if(!$this->validateArrays($indexes))
+                {
+                    return "Nem todos os dados foram preenchidos";
+                }
                 $response = $userDao->userLogin($this->dataRequest['login'],$this->dataRequest['password']);
                 if(!is_array($response))
                 {
@@ -94,8 +99,6 @@ class ProcessRequest
         if ($this->request['route'] == 'pedidos') {
             $orderDAO = new OrderDAO();
             if ($this->request['resource'] == 'criar') {
-                $error = ['Nem todos os dados foram preenchdios'];
-                try {
                     if (isset($this->dataRequest['items'])) {
                         $items = array();
                         foreach ($this->dataRequest['items'] as $item) {
@@ -111,13 +114,6 @@ class ProcessRequest
                         $order = new Order(0, $orderUserId, $orderdate, $status, $items);
                         return $orderDAO->insertOrder($order);
                     }
-
-                } catch (TypeError $typeError) {
-                    return $typeError->getMessage();
-                } catch (Exception $exception) {
-                    return $exception->getMessage();
-                }
-                return $error;
             }
         }
         if ($this->request['route'] == 'produtos') {
@@ -152,6 +148,11 @@ class ProcessRequest
         if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
             if ($this->request['resource'] == 'atualizar') {
+                $indexes = ['title', 'price', 'description', 'category', 'image'];
+                if(!$this->validateArrays($indexes))
+                {
+                    return "Nem todos os indexes foram preenchidos";
+                }
                 $id = $this->request['filter'];
                 $title = $this->dataRequest['title'];
                 $price = (float)$this->dataRequest['price'];
@@ -166,6 +167,11 @@ class ProcessRequest
                 return ['Erro ao atualizar Produto'];
             }
             if ($this->request['resource'] == 'imagem') {
+                $indexes = ['image'];
+                if(!$this->validateArrays($indexes))
+                {
+                    return "Imagem não foi definida";
+                }
                 $id = $this->request['filter'];
                 $imageData = $this->dataRequest['image'];
                 $treatProductImage = new treatProductImage($id, $imageData);
@@ -184,6 +190,11 @@ class ProcessRequest
         if ($this->request['route'] == 'review') {
             $reviewDAO = new ReviewDAO();
             if ($this->request['resource'] == 'atualizar') {
+                $indexes = ['product_id','rate','count'];
+                if(!$this->validateArrays($indexes))
+                {
+                    return "Nem todos os indexes foram preenchidos";
+                }
                 $reviewData['review_product_id'] = $this->dataRequest['product_id'];
                 $reviewData['rate'] = $this->dataRequest['rate'];
                 $reviewData['count'] = $this->dataRequest['count'];
@@ -230,5 +241,15 @@ class ProcessRequest
             return $error;
         }
         return 'método inválido';
+    }
+
+    private function validateArrays(array $indexes) : bool
+    {
+        foreach ($indexes as $index) {
+            if (!isset($this->dataRequest[$index])) {
+                return false;
+            }
+        }
+        return true;
     }
 }

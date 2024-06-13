@@ -37,7 +37,6 @@ class controller
         }
     }
 
-    //FACTORY
     private function createProductsArray(array $productsData): ?array
     {
         if (empty($productsData)) {
