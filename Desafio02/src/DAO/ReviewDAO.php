@@ -51,7 +51,7 @@ class ReviewDAO
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindValue(':rate', $reviewData['rate']);
             $stmt->bindValue(':count', $reviewData['count']);
-            $stmt->bindParam(':review_product_id', 1);
+            $stmt->bindValue(':review_product_id', 1);
             $stmt->execute();
             if ($stmt->rowCount() == 1) {
                 $this->MySQL->getDb()->commit();
