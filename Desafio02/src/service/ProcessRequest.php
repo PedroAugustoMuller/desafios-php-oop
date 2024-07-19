@@ -2,10 +2,17 @@
 
 namespace Imply\Desafio02\service;
 
+use DateTime;
+use Exception;
+use Imply\Desafio02\DAO\OrderDAO;
 use Imply\Desafio02\DAO\ProductDAO;
 use Imply\Desafio02\DAO\ReviewDAO;
+use Imply\Desafio02\DAO\UserDAO;
+use Imply\Desafio02\model\Item;
+use Imply\Desafio02\model\Order;
 use Imply\Desafio02\model\Product;
 use Imply\Desafio02\Util\JsonUtil;
+use TypeError;
 
 class ProcessRequest
 {
@@ -19,8 +26,16 @@ class ProcessRequest
 
     public function processRequest()
     {
+        if ((!isset($_SESSION['user_logged']) || $_SESSION['user_logged'] === false) && $this->request['route'] != 'user' ) {
+            return ['usuário não logado, acesse user-entrar'];
+        }
         if ($this->request['method'] != 'GET' && $this->request['method'] != 'DELETE') {
-            $this->dataRequest = JsonUtil::treatJsonBody();
+            try {
+                $this->dataRequest = JsonUtil::treatJsonBody();
+            } catch (TypeError) {
+                return 'dado inválido ou não preenchido';
+            }
+
         }
         $method = $this->request['method'];
         return $this->$method();
@@ -28,32 +43,111 @@ class ProcessRequest
 
     public function get()
     {
-        $productDAO = new ProductDAO();
-        if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
-            return $productDAO->readProductById($this->request['filter']);
+        if($this->request['route'] == 'user')
+        {
+            if ($this->request['resource'] == 'sair') {
+                $_SESSION['user_logged'] = false;
+                $_SESSION['user_permission'] = 'client';
+                $_SESSION['user_id'] = false ;
+                return 'saindo do usuário';
+            }
         }
-        if ($this->request['filter']) {
-            return $productDAO->readInactiveProducts();
+        if ($this->request['route'] == 'pedidos') {
+            $orderDAO = new OrderDAO();
+            if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
+                return $orderDAO->readOrderById($this->request['filter']);
+            }
+            if ($this->request['resource'] == 'listarAll') {
+                return $orderDAO->readAllOrders();
+            }
+            return $orderDAO->readUsersOrders($_SESSION['user_id']);
         }
-        return $productDAO->readAllProducts();
+        if ($this->request['route'] == 'produtos') {
+            $productDAO = new ProductDAO();
+            if (!empty($this->request['filter'] && is_numeric($this->request['filter']))) {
+                return $productDAO->readProductById($this->request['filter']);
+            }
+            if ($this->request['resource'] == 'inativos') {
+                return $productDAO->readInactiveProducts();
+            }
+            return $productDAO->readAllProducts();
+        }
+        return 'método inválido';
     }
 
     private function post()
     {
-        $productDAO = new ProductDAO();
-        $title = $this->dataRequest['title'];
-        $price = (float)$this->dataRequest['price'];
-        $description = $this->dataRequest['description'];
-        $category = $this->dataRequest['category'];
-        $image = $this->dataRequest['image'];
-        $produto = new Product(0, $title, $price, $description, $category, $image);
-        $response = $productDAO->insertProduct($produto);
-        if ($response > 0) {
-            $reviewDAO = new ReviewDAO();
-            $reviewDAO->insertIntoReview($response);
-            return $success = ['Produto inserido com sucesso - id: ' . $response];
+        if ($this->request['route'] == 'user') {
+            $userDao = new UserDAO();
+            if ($this->request['resource'] == 'entrar') {
+                $indexes = ['login','password'];
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
+                {
+                    return $validation;
+                }
+                $response = $userDao->userLogin($this->dataRequest['login'],$this->dataRequest['password']);
+                if(!is_array($response))
+                {
+                    return $response;
+                }
+                $_SESSION['user_id'] = $response['user_id'];
+                $_SESSION['user_permission'] = $response['access'];
+                $_SESSION['user_logged'] = true;
+                return 'Usuário logado com sucesso';
+            }
         }
-        return $error = ['Erro ao inserir Produto'];
+        if ($this->request['route'] == 'pedidos') {
+            $orderDAO = new OrderDAO();
+            if ($this->request['resource'] == 'criar') {
+                    if (isset($this->dataRequest['items'])) {
+                        $items = array();
+                        foreach ($this->dataRequest['items'] as $item) {
+                            $indexes = ['item_product_id','quantity','price','title'];
+                            $validation = $this->validateArraysItem($indexes,$item);
+                            if($validation !== true)
+                            {
+                                return $validation;
+                            }
+                            $productId = $item['item_product_id'];
+                            $quantity = $item['quantity'];
+                            $price = $item['price'];
+                            $title = $item['title'];
+                            $items[] = new Item(0, 0, $productId, $quantity, $price, $title);
+                        }
+                        $orderUserId = $_SESSION['user_id'];
+                        $orderdate = new DateTime($this->dataRequest['order_date']);
+                        $status = $this->dataRequest['status'];
+                        $order = new Order(0, $orderUserId, $orderdate, $status, $items);
+                        return $orderDAO->insertOrder($order);
+                    }
+            }
+        }
+        if ($this->request['route'] == 'produtos') {
+            $productDAO = new ProductDAO();
+            if ($this->request['resource'] == 'criar') {
+                $indexes = ['title','description','price','category'];
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
+                {
+                    return $validation;
+                }
+                    $title = $this->dataRequest['title'];
+                    $price = (float)$this->dataRequest['price'];
+                    $description = $this->dataRequest['description'];
+                    $category = $this->dataRequest['category'];
+                    $image = $this->dataRequest['image'];
+                    $produto = new Product(0, $title, $price, $description, $category, $image);
+                    $response = $productDAO->insertProduct($produto);
+                    if ($response > 0) {
+                        $reviewDAO = new ReviewDAO();
+                        $reviewDAO->insertIntoReview($response);
+                        return ['Produto inserido com sucesso - id: ' . $response];
+                    }
+                    $error = 'Erro ao inserir Produto';
+            }
+        }
+        return 'método inválido';
     }
 
     private function put()
@@ -61,6 +155,12 @@ class ProcessRequest
         if ($this->request['route'] == 'produtos') {
             $productDAO = new ProductDAO();
             if ($this->request['resource'] == 'atualizar') {
+                $indexes = ['title', 'price', 'description', 'category', 'image'];
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
+                {
+                    return $validation;
+                }
                 $id = $this->request['filter'];
                 $title = $this->dataRequest['title'];
                 $price = (float)$this->dataRequest['price'];
@@ -74,15 +174,24 @@ class ProcessRequest
                 }
                 return ['Erro ao atualizar Produto'];
             }
-            if ($this->request['resource'] == 'imagem')
-            {
+            if ($this->request['resource'] == 'imagem') {
+                $indexes = ['image'];
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
+                {
+                    return $validation;
+                }
                 $id = $this->request['filter'];
                 $imageData = $this->dataRequest['image'];
-                $treatProductImage = new treatProductImage($id,$imageData);
+                $treatProductImage = new treatProductImage($id, $imageData);
                 $imagePath = $treatProductImage->saveImage();
-                $response = $productDAO->setProductImage($imagePath,$id);
+                if($imagePath instanceof Exception)
+                {
+                    return $imagePath;
+                }
+                $response = $productDAO->setProductImage($imagePath, $id);
                 if ($response) {
-                    return $success = ['Imagem atualizada com sucesso'];
+                    return 'Imagem atualizada com sucesso';
                 }
                 return ['Erro ao atualizar Imagem'];
             }
@@ -90,6 +199,12 @@ class ProcessRequest
         if ($this->request['route'] == 'review') {
             $reviewDAO = new ReviewDAO();
             if ($this->request['resource'] == 'atualizar') {
+                $indexes = ['product_id','rate','count'];
+                $validation = $this->validateArrays($indexes);
+                if($validation !== true)
+                {
+                    return $validation;
+                }
                 $reviewData['review_product_id'] = $this->dataRequest['product_id'];
                 $reviewData['rate'] = $this->dataRequest['rate'];
                 $reviewData['count'] = $this->dataRequest['count'];
@@ -101,25 +216,59 @@ class ProcessRequest
             }
             return ["recurso inexistente"];
         }
+        return 'método inválido';
     }
 
     private function delete()
     {
-        $productDAO = new ProductDAO();
-        $response = false;
-        $error = ['Erro na operação'];
-        if ($this->request['resource'] == 'reativar') {
-            $id = $this->request['filter'];
-            $response = $productDAO->reactivateProduct($id);
-            $result = ['Produto reativado com sucesso'];
+        if ($this->request['route'] == 'pedidos') {
+            $orderDAO = new OrderDAO();
+            if ($this->request['resource'] == 'excluir') {
+                return $orderDAO->softDeleteOrderById($this->request['filter']);
+            }
+            if ($this->request['resource'] == 'cancelar') {
+                return $orderDAO->cancelOrderById($this->request['filter'], $_SESSION['user_id']);
+            }
         }
-        if ($this->request['resource'] == 'excluir') {
-            $response = $productDAO->deleteProduct($this->request['filter']);
-            $result = ['Produto desativado com sucesso'];
+        if ($this->request['route'] == 'produtos') {
+            $productDAO = new ProductDAO();
+            $response = false;
+            $error = ['Erro na operação'];
+            if ($this->request['resource'] == 'reativar') {
+                $id = $this->request['filter'];
+                $response = $productDAO->reactivateProduct($id);
+                $result = ['Produto reativado com sucesso'];
+            }
+            if ($this->request['resource'] == 'excluir') {
+                $response = $productDAO->deleteProduct($this->request['filter']);
+                $result = ['Produto desativado com sucesso'];
+            }
+            if ($response) {
+                return $result;
+            }
+            return $error;
         }
-        if ($response) {
-            return $result;
+        return 'método inválido';
+    }
+
+    private function validateArrays(array $indexes) : array|bool
+    {
+        foreach ($indexes as $index) {
+            if (!isset($this->dataRequest[$index]) || empty($this->dataRequest[$index])) {
+                return ['Indexes Necessários' =>
+                    $indexes];
+            }
         }
-        return $error;
+        return true;
+    }
+    private function validateArraysItem(array $indexes, array $item) : array|bool
+    {
+        foreach ($indexes as $index) {
+            if (!isset($this->dataRequest[$index]) || empty($this->dataRequest[$index])){
+                return ['Indexes Necessários' =>
+                    $indexes];
+            }
+        }
+        return true;
     }
 }

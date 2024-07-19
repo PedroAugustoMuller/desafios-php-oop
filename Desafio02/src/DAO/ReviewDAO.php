@@ -20,7 +20,7 @@ class ReviewDAO
     {
         try {
             $stmt = "INSERT INTO " . self::TABLE . "(rate,count,review_product_id)
-        VALUES(:rate,:count,:review_product_id)";
+                VALUES(:rate,:count,:review_product_id)";
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindValue(':rate', 0);
@@ -43,10 +43,10 @@ class ReviewDAO
     public function updateProductReview($reviewData): bool|string
     {
         try {
-            $stmt = "UPDATE " . self::TABLE . " SET
+            $stmt = 'UPDATE '. self::TABLE. ' SET
                 rate = :rate,
                 count = :count
-                WHERE review_product_id = :review_product_id";
+                WHERE review_product_id = :review_product_id';
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindValue(':rate', $reviewData['rate']);
@@ -59,9 +59,9 @@ class ReviewDAO
             }
             $this->MySQL->getDb()->rollBack();
             return false;
-        }catch(PDOException $PDException){
+        } catch (PDOException $PDException) {
             return $PDException->getMessage();
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
             return $exception->getMessage();
         }
     }

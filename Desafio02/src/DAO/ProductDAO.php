@@ -28,8 +28,7 @@ class ProductDAO
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->execute();
             $retorno = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
-            if(empty($retorno))
-            {
+            if (empty($retorno)) {
                 throw new InvalidArgumentException("Nenhum Registro encontrado no banco de dados.");
             }
             return $retorno;
@@ -50,16 +49,13 @@ class ProductDAO
             $stmt->bindParam(':id', $id);
             $stmt->execute();
             $retorno = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
-            if(empty($retorno))
-            {
+            if (empty($retorno)) {
                 throw new InvalidArgumentException("Nenhum Registro encontrado no banco de dados.");
             }
             return $retorno;
-        }catch(PDOException $PDOException)
-        {
+        } catch (PDOException $PDOException) {
             return $PDOException->getMessage();
-        }catch(Exception $exception)
-        {
+        } catch (Exception $exception) {
             return $exception->getMessage();
         }
 
@@ -74,8 +70,7 @@ class ProductDAO
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->execute();
             $retorno = $stmt->fetchAll($this->MySQL->getDb()::FETCH_ASSOC);
-            if(empty($retorno))
-            {
+            if (empty($retorno)) {
                 throw new InvalidArgumentException("Nenhum Registro encontrado no banco de dados.");
             }
             return $retorno;
@@ -153,7 +148,7 @@ class ProductDAO
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindValue(':image', $imagePath);
-            $stmt->bindValue(':id',$productId );
+            $stmt->bindValue(':id', $productId);
             $stmt->execute();
             if ($stmt->rowCount() == 1) {
                 $this->MySQL->getDb()->commit();
@@ -172,10 +167,10 @@ class ProductDAO
         try {
             $stmt = "UPDATE " . self::TABLE . " SET
             status = 2
-            WHERE product_id = :id";
+            WHERE product_id = :id AND status <> 2";
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
-            $stmt->bindValue(':id',$id );
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             if ($stmt->rowCount() == 1) {
                 $this->MySQL->getDb()->commit();
@@ -194,7 +189,7 @@ class ProductDAO
         try {
             $stmt = "UPDATE " . self::TABLE . " SET
             status = 1
-            WHERE product_id = :id";
+            WHERE product_id = :id AND status <> 1";
             $this->MySQL->getDb()->beginTransaction();
             $stmt = $this->MySQL->getDb()->prepare($stmt);
             $stmt->bindParam(':id', $id);

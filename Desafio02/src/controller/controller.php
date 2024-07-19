@@ -14,10 +14,6 @@ use InvalidArgumentException;
 
 class controller
 {
-    /**
-     * @param int $id
-     * @return array|null
-     */
     public function getProductsFromDb()
     {
         $productDAO = new ProductDAO();
@@ -25,28 +21,23 @@ class controller
         return $this->createProductsArray($products);
     }
 
-    /**
-     * @return Exception|InvalidArgumentException
-     * @throws Exception
-     */
     public function treatRequest()
     {
         try {
+            $jsonUtil = new JsonUtil();
             $route = RoutesUtil::getRoutes();
             if ($route instanceof Exception) {
-                throw $route;
+                return $jsonUtil->processArray($route->getMessage());
             }
             $processRequest = new ProcessRequest($route);
             $data = $processRequest->processRequest();
-            $jsonUtil = new JsonUtil();
             return $jsonUtil->processArray($data);
         } catch (InvalidArgumentException $invalidArgumentException) {
             return $invalidArgumentException;
         }
     }
 
-    //FACTORY
-    private function createProductsArray(array $productsData): ?array
+    private function createProductsArray($productsData): ?array
     {
         if (empty($productsData)) {
             return null;
